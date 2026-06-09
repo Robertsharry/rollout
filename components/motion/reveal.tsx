@@ -1,0 +1,30 @@
+"use client";
+
+import { motion, type HTMLMotionProps } from "framer-motion";
+
+interface RevealProps extends HTMLMotionProps<"div"> {
+  delay?: number;
+  y?: number;
+  once?: boolean;
+}
+
+/** Fade + slide-up on scroll into view. The workhorse reveal for sections. */
+export function Reveal({
+  children,
+  delay = 0,
+  y = 24,
+  once = true,
+  ...props
+}: RevealProps) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once, margin: "0px 0px -10% 0px" }}
+      transition={{ duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] }}
+      {...props}
+    >
+      {children}
+    </motion.div>
+  );
+}
