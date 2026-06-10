@@ -1,8 +1,11 @@
 import type { MetadataRoute } from "next";
 
 import { getPokemonGuides } from "@/lib/guides";
+import { STATIONS } from "@/lib/learn";
 import { GAME_SLUGS, SECTIONS } from "@/lib/site";
 import { absoluteUrl } from "@/lib/utils";
+
+const ARCADE_CABINETS = ["chip-chase", "boiler-dig", "topside"];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
@@ -10,6 +13,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/",
     ...GAME_SLUGS.map((slug) => `/${slug}`),
     ...SECTIONS.map((section) => `/${section.slug}`),
+    ...ARCADE_CABINETS.map((slug) => `/arcade/${slug}`),
+    ...STATIONS.map((station) => `/learn/${station.slug}`),
   ];
 
   const base: MetadataRoute.Sitemap = paths.map((path) => ({
