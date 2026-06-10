@@ -46,6 +46,26 @@ export const PROGRAM: ProgramEntry[] = [
     blurb: "The bestiary in motion. Study it before you dive — the cargo hold will quiz you.",
   },
   {
+    id: "iNJIs5bXoAE",
+    title: "Freedom 250: The Fight Promo",
+    ytTitle: "UFC Freedom 250: Topuria vs Gaethje - June 14th | Fight Promo",
+    channel: "UFC",
+    game: "ufc",
+    act: "Act III",
+    blurb:
+      "Topuria and Gaethje settle the lightweight argument on the South Lawn. The house watches June 14.",
+  },
+  {
+    id: "_JCbyCf2BnI",
+    title: "EA Sports UFC 6: The Reveal",
+    ytTitle: "EA Sports UFC 6 - Official Reveal Trailer",
+    channel: "IGN",
+    game: "ufc",
+    act: "Act III",
+    blurb:
+      "Pereira and Holloway take the covers. Early access opens Friday, June 12.",
+  },
+  {
     id: "6ZZ_3LeFxC4",
     title: "Greatest Knockouts of 2025",
     ytTitle: "GREATEST KNOCKOUTS From 2025!",
@@ -53,15 +73,6 @@ export const PROGRAM: ProgramEntry[] = [
     game: "ufc",
     act: "Act III",
     blurb: "A full year of lights out, called as it happened. Straight from the source.",
-  },
-  {
-    id: "mOo3OP8RWbE",
-    title: "One Knockout Per Year Since 2008",
-    ytTitle: "GREATEST KNOCKOUT From Each Year!",
-    channel: "UFC",
-    game: "ufc",
-    act: "Act III",
-    blurb: "An education in violence, one year at a time.",
   },
   {
     id: "SxwOJi2dd4c",

@@ -56,7 +56,7 @@ export default function VideosPage() {
             align="center"
             kicker="Deck 3 · The Showboat Theater"
             title="An evening at the pictures."
-            description="Seven reels on tonight's bill, hand picked by the house and shown on our own stage. Take a seat anywhere — the curtain does the rest."
+            description="Eight reels on tonight's bill, hand picked by the house and shown on our own stage — including the Freedom 250 promo and the UFC 6 reveal. Take a seat anywhere; the curtain does the rest."
           />
         </Container>
       </Section>
