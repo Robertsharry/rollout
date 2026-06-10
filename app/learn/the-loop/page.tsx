@@ -1,36 +1,42 @@
 import { Link } from "next-view-transitions";
 
-import { StationChoreo } from "@/components/learn/station-choreo";
+import { StationLoop } from "@/components/learn/station-loop";
 import { JsonLd } from "@/components/site/json-ld";
 import { Container, Section } from "@/components/site/section";
 import { getStation, stationAfter } from "@/lib/learn";
 import { breadcrumbJsonLd, buildMetadata } from "@/lib/seo";
 
-const STATION = getStation("the-choreography");
+const STATION = getStation("the-loop");
 
 export const metadata = buildMetadata({
-  title: `Station ${STATION.number}: The Choreography — CSS Transitions on the Real Curtain`,
+  title: `Station ${STATION.number}: The Loop — Arrays and .map() on the Playbill`,
   description:
-    "Learn CSS transitions and easing by driving this site's actual theater curtain: set the duration, pick the easing, and feel how motion gets personality.",
-  path: "/learn/the-choreography",
+    "Learn how one line of code lays out a hundred items. Add reels to the playbill, take some away, and watch the same .map() rewrite the list every time.",
+  path: "/learn/the-loop",
+  keywords: [
+    "javascript map tutorial",
+    "react list rendering",
+    "iteration for beginners",
+    "arrays in javascript",
+  ],
 });
 
 const RECAP = [
-  "A transition needs three answers: what property, how long, and with what easing.",
-  "Easing is the personality. Linear feels mechanical; a good curve feels like fabric, or a bounce, or a held breath.",
-  "Animate transform and opacity — the browser moves them on the graphics card. Animating layout properties like left makes the page stutter.",
-  "The grand curtain in our theater is exactly this: one transition line and one transform per side. Stagecraft is cheaper than it looks.",
+  "An array is just a numbered list of items, written between [ and ].",
+  "The .map() method runs your little function once per item and hands back a new list of whatever the function returned.",
+  "When the array changes, the .map() runs again. The list on the page rewrites itself with no extra wiring.",
+  "Our real playbill, leaderboard, guide index — every list on this site — is one .map() over an array. Learn this and you have the shape of most JavaScript on the web.",
 ];
 
-export default function TheChoreographyPage() {
-  const next = stationAfter("the-choreography");
+export default function TheLoopPage() {
+  const next = stationAfter("the-loop");
   return (
     <>
       <JsonLd
         data={breadcrumbJsonLd([
           { name: "Home", path: "/" },
           { name: "Engine Room", path: "/learn" },
-          { name: "The choreography", path: "/learn/the-choreography" },
+          { name: "The loop", path: "/learn/the-loop" },
         ])}
       />
 
@@ -48,23 +54,24 @@ export default function TheChoreographyPage() {
               Station {STATION.number} · {STATION.teaches}
             </p>
             <h1 className="mt-2 font-display text-4xl font-bold tracking-tight sm:text-5xl">
-              The choreography
+              The loop
             </h1>
             <p className="mt-4 leading-relaxed text-sage">
-              When you raised the curtain in our theater, you watched two lines
-              of CSS do all the work. A transition is a contract with the
-              browser: when this value changes, do not jump — travel. You choose
-              how long the trip takes and the shape of the journey.
+              The Showboat plays more than one reel a night. We do not write
+              one block of markup for each one. We write the list of reels
+              once, and a single line of code lays out one item per entry.
+              That line is .map(), and it is the engine behind almost every
+              list on the web.
             </p>
             <p className="mt-3 leading-relaxed text-sage">
-              This is the actual curtain rig, wired to your hands. Set the
-              clock, pick the easing, run it. The code under the controls is
-              live — what you see is exactly what ships.
+              Below is a working playbill. Press Add a reel — watch the array
+              grow by one and the list grow by one in the same breath. Remove
+              one — they both shrink. The markup never moves; the data does.
             </p>
           </header>
 
           <div className="mt-10">
-            <StationChoreo />
+            <StationLoop />
           </div>
 
           <div className="glass mt-10 rounded-lg p-6">

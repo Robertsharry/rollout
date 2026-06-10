@@ -1,36 +1,42 @@
 import { Link } from "next-view-transitions";
 
-import { StationChoreo } from "@/components/learn/station-choreo";
+import { StationSignposts } from "@/components/learn/station-signposts";
 import { JsonLd } from "@/components/site/json-ld";
 import { Container, Section } from "@/components/site/section";
 import { getStation, stationAfter } from "@/lib/learn";
 import { breadcrumbJsonLd, buildMetadata } from "@/lib/seo";
 
-const STATION = getStation("the-choreography");
+const STATION = getStation("the-signposts");
 
 export const metadata = buildMetadata({
-  title: `Station ${STATION.number}: The Choreography — CSS Transitions on the Real Curtain`,
+  title: `Station ${STATION.number}: The Signposts — Semantic HTML Landmarks`,
   description:
-    "Learn CSS transitions and easing by driving this site's actual theater curtain: set the duration, pick the easing, and feel how motion gets personality.",
-  path: "/learn/the-choreography",
+    "Why a page uses <header>, <nav>, <main>, <article>, <aside>, <footer> instead of unlabelled boxes. Hover each landmark and watch the matching region of a real page outline itself.",
+  path: "/learn/the-signposts",
+  keywords: [
+    "semantic html",
+    "html landmarks",
+    "header nav main footer",
+    "accessible page structure",
+  ],
 });
 
 const RECAP = [
-  "A transition needs three answers: what property, how long, and with what easing.",
-  "Easing is the personality. Linear feels mechanical; a good curve feels like fabric, or a bounce, or a held breath.",
-  "Animate transform and opacity — the browser moves them on the graphics card. Animating layout properties like left makes the page stutter.",
-  "The grand curtain in our theater is exactly this: one transition line and one transform per side. Stagecraft is cheaper than it looks.",
+  "Every page on the web is a few labelled rooms: a header up top, the main content in the middle, a footer at the bottom.",
+  "<header>, <nav>, <main>, <article>, <aside>, <footer> are not paint — they are signposts. They tell a browser, a screen reader, and a search engine which box is which.",
+  "Could you use plain <div>s? Yes. Should you? No. The signposts are free, and they make your page legible to readers who cannot see.",
+  "Every page on this site uses exactly this skeleton — open the inspector on any of them, you will recognise it.",
 ];
 
-export default function TheChoreographyPage() {
-  const next = stationAfter("the-choreography");
+export default function TheSignpostsPage() {
+  const next = stationAfter("the-signposts");
   return (
     <>
       <JsonLd
         data={breadcrumbJsonLd([
           { name: "Home", path: "/" },
           { name: "Engine Room", path: "/learn" },
-          { name: "The choreography", path: "/learn/the-choreography" },
+          { name: "The signposts", path: "/learn/the-signposts" },
         ])}
       />
 
@@ -48,23 +54,26 @@ export default function TheChoreographyPage() {
               Station {STATION.number} · {STATION.teaches}
             </p>
             <h1 className="mt-2 font-display text-4xl font-bold tracking-tight sm:text-5xl">
-              The choreography
+              The signposts
             </h1>
             <p className="mt-4 leading-relaxed text-sage">
-              When you raised the curtain in our theater, you watched two lines
-              of CSS do all the work. A transition is a contract with the
-              browser: when this value changes, do not jump — travel. You choose
-              how long the trip takes and the shape of the journey.
+              A page is a few rooms. There is the strip across the top with the
+              name of the house and the row of links — the header. There is
+              the main reading you came for — the main. There is the small
+              print and the copyright at the bottom — the footer. HTML has a
+              tag for each of these rooms, and using the right one is one of
+              the kindest things you can do for the readers you will never
+              meet: screen reader users, search engines, future you.
             </p>
             <p className="mt-3 leading-relaxed text-sage">
-              This is the actual curtain rig, wired to your hands. Set the
-              clock, pick the easing, run it. The code under the controls is
-              live — what you see is exactly what ships.
+              Below is a stripped down sketch of any page on this site. Hover
+              any tag, hover any room. They are the same five signposts on the
+              Pokemon cabinet, the Theater, the Patrons&apos; Ledger — every page.
             </p>
           </header>
 
           <div className="mt-10">
-            <StationChoreo />
+            <StationSignposts />
           </div>
 
           <div className="glass mt-10 rounded-lg p-6">

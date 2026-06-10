@@ -15,7 +15,7 @@ The squad's gaming house on the river — a community site for **Pokémon, UFC, 
 | Cargo Hold — region manifests | `/arc-raiders` | ✅ live |
 | Showboat Theater — curtained video stage | `/videos` | ✅ live |
 | Penny Arcade — three original cabinets | `/arcade` | ✅ live |
-| Engine Room — interactive code lessons | `/learn` | ✅ live (4 stations: HTML, CSS vars, transitions, JS state) |
+| Engine Room — interactive code lessons | `/learn` | ✅ live (12 stations: full HTML, CSS, and JS curricula) |
 | Patrons' Ledger — Stripe donations | `/donate` | ✅ live (test mode) |
 | Saloon (forums), House Board (leaderboard) | `/forums`, `/leaderboard` | 🔜 Phase 2 |
 | Check in (Discord login) + Stateroom | `/signin`, `/profile` | ✅ wired |
@@ -78,11 +78,11 @@ auth.ts           Auth.js v5 (Discord)
 
 - ✅ Foundation, riverboat design system, SEO
 - ✅ Pokémon cabinet (9 gens) + 3 Kanto guides · UFC live card · Helldivers · Arc Raiders
-- ✅ Theater · Arcade · Engine Room stations 01–04
+- ✅ Theater · Arcade · Engine Room (12 stations: HTML, CSS, JS — bones to server actions)
 - ✅ Donations (Stripe, test mode)
 - 🔜 **Phase 2:** Saloon (forums), @mentions, on-site messages, live House Board
 - 🔜 Deploy to `rollout.community` (flip Stripe live, add prod Discord redirect)
-- 🔜 More field guides (gens 2–9) · UFC fighter imagery via stats API · Station 05 (components &amp; props)
+- 🔜 More field guides (gens 2–9) · UFC fighter imagery via stats API
 
 ---
 

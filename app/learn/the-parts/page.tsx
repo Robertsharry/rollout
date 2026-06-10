@@ -1,36 +1,42 @@
 import { Link } from "next-view-transitions";
 
-import { StationChoreo } from "@/components/learn/station-choreo";
+import { StationParts } from "@/components/learn/station-parts";
 import { JsonLd } from "@/components/site/json-ld";
 import { Container, Section } from "@/components/site/section";
 import { getStation, stationAfter } from "@/lib/learn";
 import { breadcrumbJsonLd, buildMetadata } from "@/lib/seo";
 
-const STATION = getStation("the-choreography");
+const STATION = getStation("the-parts");
 
 export const metadata = buildMetadata({
-  title: `Station ${STATION.number}: The Choreography — CSS Transitions on the Real Curtain`,
+  title: `Station ${STATION.number}: The Parts — Components and Props`,
   description:
-    "Learn CSS transitions and easing by driving this site's actual theater curtain: set the duration, pick the easing, and feel how motion gets personality.",
-  path: "/learn/the-choreography",
+    "One component, many cards. Pass different props and the same little factory builds different posters — the trick behind every card on this site.",
+  path: "/learn/the-parts",
+  keywords: [
+    "react components tutorial",
+    "props for beginners",
+    "reusable components",
+    "react basics",
+  ],
 });
 
 const RECAP = [
-  "A transition needs three answers: what property, how long, and with what easing.",
-  "Easing is the personality. Linear feels mechanical; a good curve feels like fabric, or a bounce, or a held breath.",
-  "Animate transform and opacity — the browser moves them on the graphics card. Animating layout properties like left makes the page stutter.",
-  "The grand curtain in our theater is exactly this: one transition line and one transform per side. Stagecraft is cheaper than it looks.",
+  "A component is a function that returns a piece of markup. You write the recipe once.",
+  "Props are the slip of paper you hand the recipe each time you stamp a copy. Same recipe, different ingredients, different stamping.",
+  "Every <Card />, <Button />, <Badge /> on this site is exactly this — defined once, used hundreds of times with different props.",
+  "When you find yourself copying markup three times to change one word, that is the signal to lift it into a component.",
 ];
 
-export default function TheChoreographyPage() {
-  const next = stationAfter("the-choreography");
+export default function ThePartsPage() {
+  const next = stationAfter("the-parts");
   return (
     <>
       <JsonLd
         data={breadcrumbJsonLd([
           { name: "Home", path: "/" },
           { name: "Engine Room", path: "/learn" },
-          { name: "The choreography", path: "/learn/the-choreography" },
+          { name: "The parts", path: "/learn/the-parts" },
         ])}
       />
 
@@ -48,23 +54,24 @@ export default function TheChoreographyPage() {
               Station {STATION.number} · {STATION.teaches}
             </p>
             <h1 className="mt-2 font-display text-4xl font-bold tracking-tight sm:text-5xl">
-              The choreography
+              The parts
             </h1>
             <p className="mt-4 leading-relaxed text-sage">
-              When you raised the curtain in our theater, you watched two lines
-              of CSS do all the work. A transition is a contract with the
-              browser: when this value changes, do not jump — travel. You choose
-              how long the trip takes and the shape of the journey.
+              You have seen the cards on every page of this boat — the Pokemon
+              card, the UFC card, the Helldivers card. We did not write them
+              three times. We wrote one Poster recipe and handed it different
+              ingredients three times. The recipe is a component; the
+              ingredients are props.
             </p>
             <p className="mt-3 leading-relaxed text-sage">
-              This is the actual curtain rig, wired to your hands. Set the
-              clock, pick the easing, run it. The code under the controls is
-              live — what you see is exactly what ships.
+              Below is the recipe, then three stampings. Change a title, pick
+              a different accent — watch one card respond, the recipe stay
+              still. That is the whole idea: many cards from one factory.
             </p>
           </header>
 
           <div className="mt-10">
-            <StationChoreo />
+            <StationParts />
           </div>
 
           <div className="glass mt-10 rounded-lg p-6">

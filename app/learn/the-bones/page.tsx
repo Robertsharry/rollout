@@ -3,11 +3,13 @@ import { Link } from "next-view-transitions";
 import { StationBones } from "@/components/learn/station-bones";
 import { JsonLd } from "@/components/site/json-ld";
 import { Container, Section } from "@/components/site/section";
-import { stationAfter } from "@/lib/learn";
+import { getStation, stationAfter } from "@/lib/learn";
 import { breadcrumbJsonLd, buildMetadata } from "@/lib/seo";
 
+const STATION = getStation("the-bones");
+
 export const metadata = buildMetadata({
-  title: "Station 01: The Bones — HTML by Taking the Theater Apart",
+  title: `Station ${STATION.number}: The Bones — HTML by Taking the Theater Apart`,
   description:
     "Learn what HTML actually is by dissecting this site's Showboat Theater stage. Hover each line of markup and watch the matching part light up.",
   path: "/learn/the-bones",
@@ -43,7 +45,7 @@ export default function TheBonesPage() {
 
           <header className="mt-5 max-w-3xl">
             <p className="font-mono text-xs tracking-[0.2em] text-gold-light uppercase">
-              Station 01 · HTML structure
+              Station {STATION.number} · {STATION.teaches}
             </p>
             <h1 className="mt-2 font-display text-4xl font-bold tracking-tight sm:text-5xl">
               The bones

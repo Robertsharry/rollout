@@ -1,36 +1,42 @@
 import { Link } from "next-view-transitions";
 
-import { StationChoreo } from "@/components/learn/station-choreo";
+import { StationForms } from "@/components/learn/station-forms";
 import { JsonLd } from "@/components/site/json-ld";
 import { Container, Section } from "@/components/site/section";
 import { getStation, stationAfter } from "@/lib/learn";
 import { breadcrumbJsonLd, buildMetadata } from "@/lib/seo";
 
-const STATION = getStation("the-choreography");
+const STATION = getStation("the-forms");
 
 export const metadata = buildMetadata({
-  title: `Station ${STATION.number}: The Choreography — CSS Transitions on the Real Curtain`,
+  title: `Station ${STATION.number}: The Forms — HTML Inputs on the Donation Desk`,
   description:
-    "Learn CSS transitions and easing by driving this site's actual theater curtain: set the duration, pick the easing, and feel how motion gets personality.",
-  path: "/learn/the-choreography",
+    "Learn HTML forms the way the donate page is actually built — <form>, <label>, <input>, <button>. Type a figure, watch the same value travel from the input into the post body.",
+  path: "/learn/the-forms",
+  keywords: [
+    "html forms tutorial",
+    "input label button",
+    "form action method",
+    "beginner form coding",
+  ],
 });
 
 const RECAP = [
-  "A transition needs three answers: what property, how long, and with what easing.",
-  "Easing is the personality. Linear feels mechanical; a good curve feels like fabric, or a bounce, or a held breath.",
-  "Animate transform and opacity — the browser moves them on the graphics card. Animating layout properties like left makes the page stutter.",
-  "The grand curtain in our theater is exactly this: one transition line and one transform per side. Stagecraft is cheaper than it looks.",
+  "A form is an envelope. The <input>s are what you write inside it, the <button> licks the stamp, the action attribute is the address.",
+  "Every input has a name. The name is the key the server reads on the other end — change it, and the receiver looks under a different label.",
+  "The <label> is tied to its input with a matching id. Click the label, the input takes focus — and a screen reader announces them together.",
+  "Our real donate form is built out of exactly these four tags. The Stripe wiring sits behind the form, not inside it.",
 ];
 
-export default function TheChoreographyPage() {
-  const next = stationAfter("the-choreography");
+export default function TheFormsPage() {
+  const next = stationAfter("the-forms");
   return (
     <>
       <JsonLd
         data={breadcrumbJsonLd([
           { name: "Home", path: "/" },
           { name: "Engine Room", path: "/learn" },
-          { name: "The choreography", path: "/learn/the-choreography" },
+          { name: "The forms", path: "/learn/the-forms" },
         ])}
       />
 
@@ -48,23 +54,24 @@ export default function TheChoreographyPage() {
               Station {STATION.number} · {STATION.teaches}
             </p>
             <h1 className="mt-2 font-display text-4xl font-bold tracking-tight sm:text-5xl">
-              The choreography
+              The forms
             </h1>
             <p className="mt-4 leading-relaxed text-sage">
-              When you raised the curtain in our theater, you watched two lines
-              of CSS do all the work. A transition is a contract with the
-              browser: when this value changes, do not jump — travel. You choose
-              how long the trip takes and the shape of the journey.
+              The forms desk is the part of any house the patron actually
+              touches. Sign your name, name a figure, press the lever. The
+              tags behind it are simple: a form to hold them together, a label
+              to ask the question, an input to take the answer, a button to
+              send it on its way.
             </p>
             <p className="mt-3 leading-relaxed text-sage">
-              This is the actual curtain rig, wired to your hands. Set the
-              clock, pick the easing, run it. The code under the controls is
-              live — what you see is exactly what ships.
+              Below is a working miniature of our donation desk. Type a
+              figure. Hover each tag and each field. Press Send it — watch the
+              exact bundle of data leave the form.
             </p>
           </header>
 
           <div className="mt-10">
-            <StationChoreo />
+            <StationForms />
           </div>
 
           <div className="glass mt-10 rounded-lg p-6">

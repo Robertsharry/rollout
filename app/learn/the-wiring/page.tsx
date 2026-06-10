@@ -3,11 +3,13 @@ import { Link } from "next-view-transitions";
 import { StationWiring } from "@/components/learn/station-wiring";
 import { JsonLd } from "@/components/site/json-ld";
 import { Container, Section } from "@/components/site/section";
-import { stationAfter } from "@/lib/learn";
+import { getStation, stationAfter } from "@/lib/learn";
 import { breadcrumbJsonLd, buildMetadata } from "@/lib/seo";
 
+const STATION = getStation("the-wiring");
+
 export const metadata = buildMetadata({
-  title: "Station 04: The Wiring — JavaScript by Running a Tiny Theater",
+  title: `Station ${STATION.number}: The Wiring — JavaScript by Running a Tiny Theater`,
   description:
     "Learn the JavaScript loop — state, events, handlers, render — by driving a working miniature of this site's Showboat Theater. Click a control, watch the state change in code, watch the boat answer.",
   path: "/learn/the-wiring",
@@ -50,7 +52,7 @@ export default function TheWiringPage() {
 
           <header className="mt-5 max-w-3xl">
             <p className="font-mono text-xs tracking-[0.2em] text-gold-light uppercase">
-              Station 04 · State, events &amp; handlers
+              Station {STATION.number} · {STATION.teaches}
             </p>
             <h1 className="mt-2 font-display text-4xl font-bold tracking-tight sm:text-5xl">
               The wiring

@@ -3,11 +3,13 @@ import { Link } from "next-view-transitions";
 import { StationPaint } from "@/components/learn/station-paint";
 import { JsonLd } from "@/components/site/json-ld";
 import { Container, Section } from "@/components/site/section";
-import { stationAfter } from "@/lib/learn";
+import { getStation, stationAfter } from "@/lib/learn";
 import { breadcrumbJsonLd, buildMetadata } from "@/lib/seo";
 
+const STATION = getStation("the-paint-shop");
+
 export const metadata = buildMetadata({
-  title: "Station 02: The Paint Shop — CSS Variables on a Real Card",
+  title: `Station ${STATION.number}: The Paint Shop — CSS Variables on a Real Card`,
   description:
     "Learn CSS custom properties by repainting one of this site's real cards. Swap whole liveries and mix your own accent, then read the one line of code that did it.",
   path: "/learn/the-paint-shop",
@@ -43,7 +45,7 @@ export default function ThePaintShopPage() {
 
           <header className="mt-5 max-w-3xl">
             <p className="font-mono text-xs tracking-[0.2em] text-gold-light uppercase">
-              Station 02 · CSS &amp; design tokens
+              Station {STATION.number} · {STATION.teaches}
             </p>
             <h1 className="mt-2 font-display text-4xl font-bold tracking-tight sm:text-5xl">
               The paint shop

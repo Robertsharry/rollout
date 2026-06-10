@@ -1,36 +1,42 @@
 import { Link } from "next-view-transitions";
 
-import { StationChoreo } from "@/components/learn/station-choreo";
+import { StationConditions } from "@/components/learn/station-conditions";
 import { JsonLd } from "@/components/site/json-ld";
 import { Container, Section } from "@/components/site/section";
 import { getStation, stationAfter } from "@/lib/learn";
 import { breadcrumbJsonLd, buildMetadata } from "@/lib/seo";
 
-const STATION = getStation("the-choreography");
+const STATION = getStation("the-conditions");
 
 export const metadata = buildMetadata({
-  title: `Station ${STATION.number}: The Choreography — CSS Transitions on the Real Curtain`,
+  title: `Station ${STATION.number}: The Conditions — Conditional Rendering`,
   description:
-    "Learn CSS transitions and easing by driving this site's actual theater curtain: set the duration, pick the easing, and feel how motion gets personality.",
-  path: "/learn/the-choreography",
+    "Learn how the boat decides what to draw. Flip a status and watch one ternary choose the curtain, the picture, or the empty stage.",
+  path: "/learn/the-conditions",
+  keywords: [
+    "react conditional rendering",
+    "ternary operator",
+    "javascript if else",
+    "show hide elements",
+  ],
 });
 
 const RECAP = [
-  "A transition needs three answers: what property, how long, and with what easing.",
-  "Easing is the personality. Linear feels mechanical; a good curve feels like fabric, or a bounce, or a held breath.",
-  "Animate transform and opacity — the browser moves them on the graphics card. Animating layout properties like left makes the page stutter.",
-  "The grand curtain in our theater is exactly this: one transition line and one transform per side. Stagecraft is cheaper than it looks.",
+  "A condition is a fork in the road. The code asks a yes-or-no question and follows the matching branch.",
+  "The ternary (a ? b : c) is the shortest way to write 'show b when a is true, otherwise show c' — it returns a value, so it slots straight into the markup.",
+  "The branch you do not take is never drawn. The browser never sees the markup of branches the condition skipped.",
+  "Every show-or-hide on this site — toasts, modals, the curtain itself — is one of these forks under the hood.",
 ];
 
-export default function TheChoreographyPage() {
-  const next = stationAfter("the-choreography");
+export default function TheConditionsPage() {
+  const next = stationAfter("the-conditions");
   return (
     <>
       <JsonLd
         data={breadcrumbJsonLd([
           { name: "Home", path: "/" },
           { name: "Engine Room", path: "/learn" },
-          { name: "The choreography", path: "/learn/the-choreography" },
+          { name: "The conditions", path: "/learn/the-conditions" },
         ])}
       />
 
@@ -48,23 +54,24 @@ export default function TheChoreographyPage() {
               Station {STATION.number} · {STATION.teaches}
             </p>
             <h1 className="mt-2 font-display text-4xl font-bold tracking-tight sm:text-5xl">
-              The choreography
+              The conditions
             </h1>
             <p className="mt-4 leading-relaxed text-sage">
-              When you raised the curtain in our theater, you watched two lines
-              of CSS do all the work. A transition is a contract with the
-              browser: when this value changes, do not jump — travel. You choose
-              how long the trip takes and the shape of the journey.
+              A theater does not show every scene every night. Before the bell
+              there is the curtain. After the bell there is the picture. While
+              a reel is playing there is also a marquee announcing what is on.
+              JavaScript decides which of those to draw with a single yes or
+              no, written as a ternary.
             </p>
             <p className="mt-3 leading-relaxed text-sage">
-              This is the actual curtain rig, wired to your hands. Set the
-              clock, pick the easing, run it. The code under the controls is
-              live — what you see is exactly what ships.
+              Below is the stage and its small script. Flip the status to one
+              of three values. Watch only the matching branch fire and only
+              the matching parts get drawn.
             </p>
           </header>
 
           <div className="mt-10">
-            <StationChoreo />
+            <StationConditions />
           </div>
 
           <div className="glass mt-10 rounded-lg p-6">

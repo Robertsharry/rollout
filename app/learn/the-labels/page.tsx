@@ -1,36 +1,42 @@
 import { Link } from "next-view-transitions";
 
-import { StationChoreo } from "@/components/learn/station-choreo";
+import { StationLabels } from "@/components/learn/station-labels";
 import { JsonLd } from "@/components/site/json-ld";
 import { Container, Section } from "@/components/site/section";
 import { getStation, stationAfter } from "@/lib/learn";
 import { breadcrumbJsonLd, buildMetadata } from "@/lib/seo";
 
-const STATION = getStation("the-choreography");
+const STATION = getStation("the-labels");
 
 export const metadata = buildMetadata({
-  title: `Station ${STATION.number}: The Choreography — CSS Transitions on the Real Curtain`,
+  title: `Station ${STATION.number}: The Labels — HTML Attributes on a Real Link`,
   description:
-    "Learn CSS transitions and easing by driving this site's actual theater curtain: set the duration, pick the easing, and feel how motion gets personality.",
-  path: "/learn/the-choreography",
+    "Learn what HTML attributes actually do. Take them off a real anchor element one at a time and watch what the tag stops doing — opens in a new tab, safe to follow, the screen reader announcement.",
+  path: "/learn/the-labels",
+  keywords: [
+    "html attributes tutorial",
+    "anchor tag attributes",
+    "aria label explained",
+    "target blank rel noopener",
+  ],
 });
 
 const RECAP = [
-  "A transition needs three answers: what property, how long, and with what easing.",
-  "Easing is the personality. Linear feels mechanical; a good curve feels like fabric, or a bounce, or a held breath.",
-  "Animate transform and opacity — the browser moves them on the graphics card. Animating layout properties like left makes the page stutter.",
-  "The grand curtain in our theater is exactly this: one transition line and one transform per side. Stagecraft is cheaper than it looks.",
+  "An attribute is a tiny pair: a key and a value, written inside the opening tag.",
+  "Every attribute does ONE small job — where to go, how to open, what the screen reader says, which paint to wear.",
+  "Take an attribute off and the tag still works; it just stops doing that one job. That is how you debug a busted link in seconds.",
+  "The boat's navbar, the theater's iframe, the donate button — every label on this site is built out of plain attributes like these.",
 ];
 
-export default function TheChoreographyPage() {
-  const next = stationAfter("the-choreography");
+export default function TheLabelsPage() {
+  const next = stationAfter("the-labels");
   return (
     <>
       <JsonLd
         data={breadcrumbJsonLd([
           { name: "Home", path: "/" },
           { name: "Engine Room", path: "/learn" },
-          { name: "The choreography", path: "/learn/the-choreography" },
+          { name: "The labels", path: "/learn/the-labels" },
         ])}
       />
 
@@ -48,23 +54,24 @@ export default function TheChoreographyPage() {
               Station {STATION.number} · {STATION.teaches}
             </p>
             <h1 className="mt-2 font-display text-4xl font-bold tracking-tight sm:text-5xl">
-              The choreography
+              The labels
             </h1>
             <p className="mt-4 leading-relaxed text-sage">
-              When you raised the curtain in our theater, you watched two lines
-              of CSS do all the work. A transition is a contract with the
-              browser: when this value changes, do not jump — travel. You choose
-              how long the trip takes and the shape of the journey.
+              You met tags in The Bones. Most tags are not much on their own —
+              an empty link goes nowhere, an empty image shows nothing. The
+              attributes are how a tag gets its job. Each one is a labelled
+              instruction stapled to the inside of the opening tag.
             </p>
             <p className="mt-3 leading-relaxed text-sage">
-              This is the actual curtain rig, wired to your hands. Set the
-              clock, pick the easing, run it. The code under the controls is
-              live — what you see is exactly what ships.
+              Below is a real link to our Discord, rigged with all the labels
+              it actually wears in production. Hover any one to see what it
+              does. Toggle it off to see what disappears. The tag stays — only
+              the work changes.
             </p>
           </header>
 
           <div className="mt-10">
-            <StationChoreo />
+            <StationLabels />
           </div>
 
           <div className="glass mt-10 rounded-lg p-6">

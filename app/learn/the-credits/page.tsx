@@ -1,36 +1,42 @@
 import { Link } from "next-view-transitions";
 
-import { StationChoreo } from "@/components/learn/station-choreo";
+import { StationCredits } from "@/components/learn/station-credits";
 import { JsonLd } from "@/components/site/json-ld";
 import { Container, Section } from "@/components/site/section";
 import { getStation, stationAfter } from "@/lib/learn";
 import { breadcrumbJsonLd, buildMetadata } from "@/lib/seo";
 
-const STATION = getStation("the-choreography");
+const STATION = getStation("the-credits");
 
 export const metadata = buildMetadata({
-  title: `Station ${STATION.number}: The Choreography — CSS Transitions on the Real Curtain`,
+  title: `Station ${STATION.number}: The Credits — Alt Text and ARIA Labels`,
   description:
-    "Learn CSS transitions and easing by driving this site's actual theater curtain: set the duration, pick the easing, and feel how motion gets personality.",
-  path: "/learn/the-choreography",
+    "Why every image needs an alt and every icon button needs an aria-label. Toggle the captions on real elements and hear what disappears for non sighted readers.",
+  path: "/learn/the-credits",
+  keywords: [
+    "alt text tutorial",
+    "aria label tutorial",
+    "accessibility for beginners",
+    "screen reader basics",
+  ],
 });
 
 const RECAP = [
-  "A transition needs three answers: what property, how long, and with what easing.",
-  "Easing is the personality. Linear feels mechanical; a good curve feels like fabric, or a bounce, or a held breath.",
-  "Animate transform and opacity — the browser moves them on the graphics card. Animating layout properties like left makes the page stutter.",
-  "The grand curtain in our theater is exactly this: one transition line and one transform per side. Stagecraft is cheaper than it looks.",
+  "The screen is one of many ways a page is read. Roughly one in fifty patrons reads with their ears, through a screen reader.",
+  "alt text on an image is the caption a reader hears. A picture with no alt is silence — the reader just hears 'image'.",
+  "An icon button with no aria-label is silence the same way — 'button' is all the reader hears, and 'button' is not a job description.",
+  "Two attributes, a few quiet seconds of writing. The whole boat opens up to a reader who could not see it otherwise.",
 ];
 
-export default function TheChoreographyPage() {
-  const next = stationAfter("the-choreography");
+export default function TheCreditsPage() {
+  const next = stationAfter("the-credits");
   return (
     <>
       <JsonLd
         data={breadcrumbJsonLd([
           { name: "Home", path: "/" },
           { name: "Engine Room", path: "/learn" },
-          { name: "The choreography", path: "/learn/the-choreography" },
+          { name: "The credits", path: "/learn/the-credits" },
         ])}
       />
 
@@ -48,23 +54,25 @@ export default function TheChoreographyPage() {
               Station {STATION.number} · {STATION.teaches}
             </p>
             <h1 className="mt-2 font-display text-4xl font-bold tracking-tight sm:text-5xl">
-              The choreography
+              The credits
             </h1>
             <p className="mt-4 leading-relaxed text-sage">
-              When you raised the curtain in our theater, you watched two lines
-              of CSS do all the work. A transition is a contract with the
-              browser: when this value changes, do not jump — travel. You choose
-              how long the trip takes and the shape of the journey.
+              Imagine a guest at the door of the house who cannot see the
+              brass and the velvet. Your job, as the proprietor, is to
+              describe the room out loud. That is what alt text and ARIA
+              labels are. They are the captions a screen reader speaks. Get
+              them right and a whole class of patron walks aboard. Skip them
+              and the room is silent.
             </p>
             <p className="mt-3 leading-relaxed text-sage">
-              This is the actual curtain rig, wired to your hands. Set the
-              clock, pick the easing, run it. The code under the controls is
-              live — what you see is exactly what ships.
+              Below is a real poster and a real icon button. Toggle their
+              captions and listen to what disappears. Every image and every
+              icon on this site gets the same treatment.
             </p>
           </header>
 
           <div className="mt-10">
-            <StationChoreo />
+            <StationCredits />
           </div>
 
           <div className="glass mt-10 rounded-lg p-6">
