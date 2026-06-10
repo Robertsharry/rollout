@@ -11,7 +11,8 @@ export interface CodeLine {
 interface CodeBlockProps {
   title: string;
   lines: CodeLine[];
-  activeId?: string | null;
+  /** Either a single id, an array of ids, or null. Lines with a matching id light up. */
+  activeId?: string | string[] | null;
   onActivate?: (id: string | null) => void;
 }
 
@@ -20,6 +21,12 @@ interface CodeBlockProps {
  * wired so hovering a line lights the matching part of the live demo.
  */
 export function CodeBlock({ title, lines, activeId, onActivate }: CodeBlockProps) {
+  const activeSet =
+    Array.isArray(activeId)
+      ? new Set(activeId)
+      : activeId
+        ? new Set([activeId])
+        : null;
   return (
     <div className="overflow-hidden rounded-lg border border-brass/30 bg-[#10130E]">
       <div className="flex items-center justify-between border-b border-brass/25 bg-[#171B14] px-4 py-2">
@@ -35,7 +42,7 @@ export function CodeBlock({ title, lines, activeId, onActivate }: CodeBlockProps
       <pre className="overflow-x-auto p-3 text-[13px] leading-relaxed">
         {lines.map((line, i) => {
           const interactive = Boolean(line.id && onActivate);
-          const active = line.id && line.id === activeId;
+          const active = line.id && activeSet?.has(line.id);
           return (
             <div
               key={i}

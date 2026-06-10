@@ -31,6 +31,14 @@ export const STATIONS: Station[] = [
       "The two lines of CSS behind the theater curtain. Drive the duration and easing yourself and feel how motion gets its personality.",
     teaches: "Transitions & easing",
   },
+  {
+    slug: "the-wiring",
+    number: "04",
+    title: "The wiring",
+    summary:
+      "How a click becomes movement. Drive a tiny working theater with its own script — buttons fire recipes, recipes edit state, the boat answers.",
+    teaches: "State, events & handlers",
+  },
 ];
 
 export function stationAfter(slug: string): Station | null {

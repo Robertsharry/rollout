@@ -10,13 +10,15 @@ import { breadcrumbJsonLd, buildMetadata } from "@/lib/seo";
 export const metadata = buildMetadata({
   title: "The Engine Room — Learn to Code, Visually",
   description:
-    "Interactive coding lessons that open the panels of this very website: take the theater stage apart, repaint the house with one variable, and drive the curtain's animation yourself.",
+    "Interactive coding lessons that open the panels of this very website: take the theater stage apart, repaint the house with one variable, drive the curtain's animation yourself, and wire a tiny working theater in JavaScript.",
   path: "/learn",
   keywords: [
     "learn html visually",
     "learn css interactive",
     "css variables tutorial",
     "css transitions tutorial",
+    "learn javascript visually",
+    "javascript state tutorial",
     "beginner web development",
   ],
 });
@@ -79,10 +81,10 @@ export default function LearnPage() {
             <StaggerItem>
               <div className="rounded-lg border border-border/70 bg-mahogany/40 p-6 text-center">
                 <p className="font-display text-sm font-semibold tracking-[0.18em] text-foreground/70 uppercase">
-                  Station 04 — fitting out
+                  Station 05 — in the works
                 </p>
                 <p className="mt-1.5 font-mono text-[11px] tracking-[0.14em] text-muted-foreground/80 uppercase">
-                  JavaScript: making the boat answer back · arriving soon
+                  Components &amp; props: building the boat from reusable parts · arriving soon
                 </p>
               </div>
             </StaggerItem>

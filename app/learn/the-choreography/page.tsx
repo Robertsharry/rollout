@@ -3,6 +3,7 @@ import { Link } from "next-view-transitions";
 import { StationChoreo } from "@/components/learn/station-choreo";
 import { JsonLd } from "@/components/site/json-ld";
 import { Container, Section } from "@/components/site/section";
+import { stationAfter } from "@/lib/learn";
 import { breadcrumbJsonLd, buildMetadata } from "@/lib/seo";
 
 export const metadata = buildMetadata({
@@ -20,6 +21,7 @@ const RECAP = [
 ];
 
 export default function TheChoreographyPage() {
+  const next = stationAfter("the-choreography");
   return (
     <>
       <JsonLd
@@ -77,17 +79,16 @@ export default function TheChoreographyPage() {
             </ul>
           </div>
 
-          <div className="mt-8 flex items-center justify-between">
-            <Link
-              href="/learn"
-              className="text-sm font-medium text-brass transition-colors hover:text-gold-light"
-            >
-              <span aria-hidden>☜</span> Back to the Engine Room
-            </Link>
-            <p className="font-mono text-[11px] tracking-[0.14em] text-muted-foreground/80 uppercase">
-              Station 04 is being fitted
-            </p>
-          </div>
+          {next ? (
+            <div className="mt-8 text-right">
+              <Link
+                href={`/learn/${next.slug}`}
+                className="text-sm font-medium text-brass transition-colors hover:text-gold-light"
+              >
+                Next — Station {next.number}: {next.title} <span aria-hidden>☞</span>
+              </Link>
+            </div>
+          ) : null}
         </Container>
       </Section>
     </>
