@@ -59,7 +59,7 @@ interface LogoProps {
 export function Logo({ className, markOnly }: LogoProps) {
   return (
     <span className={cn("inline-flex items-center gap-2.5", className)}>
-      <LogoMark className="size-8" />
+      <LogoMark className="size-8 origin-center group-hover/logo:animate-helm" />
       {!markOnly ? (
         <span className="font-display text-lg font-bold tracking-[0.18em]">
           {SITE.name}

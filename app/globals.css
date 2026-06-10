@@ -79,6 +79,7 @@
   --animate-float: float 7s ease-in-out infinite;
   --animate-pulse-glow: pulse-glow 3.5s ease-in-out infinite;
   --animate-shimmer: shimmer 4s linear infinite;
+  --animate-helm: helm 1.1s cubic-bezier(0.45, 0.05, 0.25, 1);
 }
 
 /* Dark-first: :root and .dark hold the same deck palette so colors are
@@ -262,5 +263,23 @@
 @keyframes shimmer {
   to {
     background-position: -200% 0;
+  }
+}
+/* the helmsman corrects course: hard over, swing back, settle */
+@keyframes helm {
+  0% {
+    transform: rotate(0deg);
+  }
+  28% {
+    transform: rotate(52deg);
+  }
+  60% {
+    transform: rotate(-32deg);
+  }
+  82% {
+    transform: rotate(13deg);
+  }
+  100% {
+    transform: rotate(0deg);
   }
 }

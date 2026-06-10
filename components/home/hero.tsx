@@ -50,10 +50,11 @@ export function Hero() {
         <div className="absolute inset-x-0 bottom-0 h-36 bg-gradient-to-b from-transparent to-background" />
       </div>
 
-      {/* gilt picture frame around the viewport */}
+      {/* gilt picture frame — top edge sits below the navbar so it never
+          crosses the wordmark */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-3 border border-brass/45 sm:inset-5"
+        className="pointer-events-none absolute inset-x-3 top-[4.75rem] bottom-3 border border-brass/45 sm:inset-x-5 sm:bottom-5"
       >
         <div className="absolute inset-1.5 border border-brass/20" />
         <span className="absolute -top-1 -left-1 size-2 rotate-45 bg-brass" />

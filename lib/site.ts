@@ -25,6 +25,8 @@ export const SITE = {
     "Rollout is a gaming house run by veterans, covering Pokémon, UFC, Arc Raiders, and Helldivers 2. Deep tutorials, loadouts for every planet and region, leaderboards, forums, and a Discord that actually shows up.",
   // NEXT_PUBLIC_SITE_URL is set in production; localhost is the dev fallback.
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
+  /** Canonical production hostname — used as a fallback for OG/SEO before deploy. */
+  productionUrl: "https://rollout.community",
   discordInvite: process.env.NEXT_PUBLIC_DISCORD_INVITE ?? "https://discord.gg",
   locale: "en_US",
 } as const;
