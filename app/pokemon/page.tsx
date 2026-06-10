@@ -2,39 +2,106 @@ import Image from "next/image";
 import { Link } from "next-view-transitions";
 
 import { JsonLd } from "@/components/site/json-ld";
+import { DiscordButton } from "@/components/site/discord-button";
 import { Container, Section } from "@/components/site/section";
 import { SectionHeading } from "@/components/site/section-heading";
+import { Reveal } from "@/components/motion/reveal";
 import { artworkUrl, getPokemonGuides } from "@/lib/guides";
+import { GENERATIONS, STARTER_COUNT, type StarterLine } from "@/lib/pokemon-starters";
 import { breadcrumbJsonLd, buildMetadata } from "@/lib/seo";
+import { cn } from "@/lib/utils";
 
 export const metadata = buildMetadata({
-  title: "Pokémon Starter Field Guides — The Specimen Cabinet",
+  title: "Pokémon Starter Field Guides, Kanto to Paldea — The Specimen Cabinet",
   description:
-    "Full field guides for every Kanto starter: base stats, evolution lines, movesets, gym matchups, and team building. Cataloged by the Rollout house outfitters.",
+    "Every starter from all nine generations cataloged in one cabinet — Kanto through Paldea, 27 lines. Full field guides with stats, evolutions, movesets, and gym matchups, rolling out wing by wing.",
   path: "/pokemon",
   keywords: [
     "pokemon starter guide",
     "best starter pokemon",
-    "bulbasaur guide",
-    "charmander guide",
-    "squirtle guide",
+    "all pokemon starters by generation",
     "kanto starters",
+    "paldea starters",
+    "scarlet violet starters",
   ],
 });
 
-interface LockedDrawer {
-  label: string;
-  note: string;
+function SpecimenPlate({
+  starter,
+  guideReady,
+}: {
+  starter: StarterLine;
+  guideReady: boolean;
+}) {
+  const inner = (
+    <>
+      <div className="border-b border-brass/30 bg-card/80 px-3 py-2 text-center">
+        <span className="font-display text-[10px] font-semibold tracking-[0.18em] text-gold-light uppercase">
+          №{String(starter.dexId).padStart(3, "0")} — {starter.name}
+        </span>
+      </div>
+      <div className="relative flex justify-center px-4 pt-4">
+        <div
+          aria-hidden
+          className={cn(
+            "absolute top-7 size-24 rounded-full blur-2xl transition-all duration-300",
+            guideReady ? "bg-brass/15 group-hover:bg-brass/25" : "bg-brass/5",
+          )}
+        />
+        <Image
+          src={artworkUrl(starter.dexId)}
+          alt={`Official artwork of ${starter.name}`}
+          width={120}
+          height={120}
+          className={cn(
+            "relative transition-transform duration-300",
+            guideReady ? "group-hover:scale-105" : "opacity-90",
+          )}
+        />
+      </div>
+      <div className="flex flex-1 flex-col items-center gap-2.5 p-4 pt-3">
+        <div className="flex flex-wrap justify-center gap-1.5">
+          {starter.types.map((type) => (
+            <span
+              key={type}
+              className="rounded-full border border-brass/40 bg-background/40 px-2 py-0.5 font-mono text-[10px] tracking-[0.1em] text-gold-light uppercase"
+            >
+              {type}
+            </span>
+          ))}
+        </div>
+        {guideReady ? (
+          <span className="mt-auto text-sm font-medium text-brass">
+            Open the field guide <span aria-hidden>☞</span>
+          </span>
+        ) : (
+          <span className="mt-auto font-mono text-[10px] tracking-[0.14em] text-muted-foreground/90 uppercase">
+            Guide commissioned
+          </span>
+        )}
+      </div>
+    </>
+  );
+
+  if (guideReady) {
+    return (
+      <Link
+        href={`/pokemon/guides/${starter.guideSlug}`}
+        className="group glass flex h-full flex-col overflow-hidden rounded-lg transition-all duration-300 hover:-translate-y-1 hover:border-brass/60"
+      >
+        {inner}
+      </Link>
+    );
+  }
+  return (
+    <div className="glass flex h-full flex-col overflow-hidden rounded-lg border-border/60">
+      {inner}
+    </div>
+  );
 }
 
-const LOCKED_DRAWERS: LockedDrawer[] = [
-  { label: "Johto specimens", note: "Arriving soon" },
-  { label: "Hoenn specimens", note: "Arriving soon" },
-  { label: "Team recipes", note: "Arriving soon" },
-];
-
 export default async function PokemonPage() {
-  const guides = await getPokemonGuides();
+  const written = new Set((await getPokemonGuides()).map((g) => g.slug));
 
   return (
     <>
@@ -50,91 +117,55 @@ export default async function PokemonPage() {
           <SectionHeading
             align="center"
             kicker="The specimen cabinet"
-            title="Choose your first partner."
-            description="Every starter cataloged by the house outfitters: stats, evolutions, movesets, and the road through Kanto. Pull a drawer to read the full field guide."
+            title="Nine generations. Every starter. One cabinet."
+            description={`All ${STARTER_COUNT} starter lines from Kanto to Paldea, cataloged by the house outfitters. Kanto's full field guides are on the shelf now — stats, evolutions, movesets, and the road through the gyms. The remaining wings are commissioned and filling drawer by drawer.`}
           />
         </Container>
       </Section>
 
-      <Section spacing="sm">
+      <Section spacing="sm" className="pb-24">
         <Container>
-          <div className="grid gap-6 md:grid-cols-3">
-            {guides.map((guide) => (
-              <Link
-                key={guide.slug}
-                href={`/pokemon/guides/${guide.slug}`}
-                className="group glass flex h-full flex-col overflow-hidden rounded-lg transition-all duration-300 hover:-translate-y-1 hover:border-brass/60"
-              >
-                <div className="border-b border-brass/30 bg-card/80 px-4 py-2.5 text-center">
-                  <span className="font-display text-[11px] font-semibold tracking-[0.22em] text-gold-light uppercase">
-                    Specimen №{String(guide.dexId).padStart(3, "0")} —{" "}
-                    {guide.starter}
-                  </span>
-                </div>
-
-                <div className="relative flex justify-center px-6 pt-6">
-                  <div
-                    aria-hidden
-                    className="absolute top-10 size-36 rounded-full bg-brass/10 blur-2xl transition-all duration-300 group-hover:bg-brass/20"
-                  />
-                  <Image
-                    src={artworkUrl(guide.dexId)}
-                    alt={`Official artwork of ${guide.starter}`}
-                    width={176}
-                    height={176}
-                    className="relative transition-transform duration-300 group-hover:scale-105"
-                  />
-                </div>
-
-                <div className="flex flex-1 flex-col p-6 pt-4 text-center">
-                  <div className="flex justify-center gap-2">
-                    {guide.types.map((type) => (
-                      <span
-                        key={type}
-                        className="rounded-full border border-brass/40 bg-background/40 px-2.5 py-0.5 font-mono text-[11px] tracking-[0.12em] text-gold-light uppercase"
-                      >
-                        {type}
+          <div className="space-y-12">
+            {GENERATIONS.map((gen) => (
+              <Reveal key={gen.gen}>
+                <section aria-label={`Generation ${gen.gen}: ${gen.region}`}>
+                  <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-b border-brass/25 pb-3">
+                    <div className="flex items-baseline gap-3">
+                      <span className="font-display text-sm font-bold tracking-[0.18em] text-gold-light uppercase">
+                        Wing {String(gen.gen).padStart(2, "0")}
                       </span>
-                    ))}
-                    <span className="rounded-full border border-border bg-background/40 px-2.5 py-0.5 font-mono text-[11px] tracking-[0.12em] text-foreground/75 uppercase">
-                      {guide.difficulty}
+                      <h2 className="font-display text-2xl font-bold tracking-tight sm:text-3xl">
+                        {gen.region}
+                      </h2>
+                    </div>
+                    <span className="font-mono text-[11px] tracking-[0.14em] text-sage uppercase">
+                      {gen.games}
                     </span>
                   </div>
-                  <p className="mt-4 text-sm leading-relaxed text-sage">
-                    {guide.summary}
-                  </p>
-                  <span className="mt-auto pt-5 text-sm font-medium text-brass">
-                    Open the field guide <span aria-hidden>☞</span>
-                  </span>
-                </div>
-              </Link>
+                  <div className="mt-5 grid gap-4 sm:grid-cols-3">
+                    {gen.starters.map((starter) => (
+                      <SpecimenPlate
+                        key={starter.dexId}
+                        starter={starter}
+                        guideReady={Boolean(
+                          starter.guideSlug && written.has(starter.guideSlug),
+                        )}
+                      />
+                    ))}
+                  </div>
+                </section>
+              </Reveal>
             ))}
           </div>
 
-          <div className="mt-6 grid gap-4 sm:grid-cols-3">
-            {LOCKED_DRAWERS.map((drawer) => (
-              <div
-                key={drawer.label}
-                className="rounded-md border border-border/70 bg-mahogany/40 px-5 py-4 text-center"
-              >
-                <p className="font-display text-xs font-semibold tracking-[0.2em] text-foreground/70 uppercase">
-                  {drawer.label}
-                </p>
-                <p className="mt-1 font-mono text-[11px] tracking-[0.14em] text-muted-foreground/80 uppercase">
-                  {drawer.note}
-                </p>
-                <span
-                  aria-hidden
-                  className="mx-auto mt-3 block size-2.5 rounded-full bg-brass/50"
-                />
-              </div>
-            ))}
+          <div className="mt-16 text-center">
+            <p className="text-sm text-sage">
+              Which wing should the outfitters write next? The squad decides.
+            </p>
+            <div className="mt-4 flex justify-center">
+              <DiscordButton label="Vote the next guides in Discord" />
+            </div>
           </div>
-
-          <p className="mt-10 text-center text-sm text-sage">
-            Got a take on the right pick? The Saloon opens soon — bring your
-            argument.
-          </p>
         </Container>
       </Section>
     </>

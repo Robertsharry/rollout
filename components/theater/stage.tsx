@@ -66,7 +66,7 @@ export function Stage({
   return (
     <figure className={cn("relative", lightsDown && "z-50")}>
       {/* proscenium */}
-      <div className="overflow-hidden rounded-lg border border-brass/60 bg-[#241A12] p-2.5 shadow-2xl sm:p-3.5">
+      <div className="relative overflow-hidden rounded-lg border border-brass/60 bg-[#241A12] p-2.5 shadow-2xl sm:p-3.5">
         <div className="pointer-events-none absolute inset-1.5 rounded-md border border-brass/25" />
 
         {/* marquee */}
@@ -155,17 +155,17 @@ export function Stage({
       </div>
 
       {/* stage controls + credit */}
-      <figcaption className="mt-3 flex flex-wrap items-center justify-between gap-3 px-1">
-        <p className="font-mono text-xs tracking-[0.12em] text-sage uppercase">
+      <figcaption className="mt-4 flex flex-wrap items-center justify-between gap-x-6 gap-y-2 px-1.5">
+        <p className="font-mono text-xs leading-relaxed tracking-[0.1em] text-sage uppercase">
           Reel courtesy of {entry.channel}
         </p>
         {playing ? (
           <button
             type="button"
             onClick={onToggleLights}
-            className="font-mono text-xs tracking-[0.12em] text-sage uppercase transition-colors hover:text-foreground"
+            className="rounded-md border border-border bg-card/60 px-3 py-1.5 font-mono text-xs tracking-[0.1em] text-sage uppercase transition-colors hover:border-brass/60 hover:text-foreground"
           >
-            House lights: {lightsDown ? "down ◆ click to raise" : "up ◆ click to dim"}
+            House lights: {lightsDown ? "down ◆ raise" : "up ◆ dim"}
           </button>
         ) : null}
       </figcaption>
