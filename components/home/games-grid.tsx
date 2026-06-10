@@ -9,9 +9,9 @@ export function GamesGrid() {
     <Section id="games">
       <Container>
         <SectionHeading
-          kicker="The Games"
-          title="Four games. One home base."
-          description="Pick your battlefield. Each hub is loaded with tutorials, loadouts, and the people who main it."
+          kicker="The gaming decks"
+          title="Four tables. One house."
+          description="Pick your table. Every deck is stocked with field guides, loadouts, and the regulars who main it."
         />
         <Stagger className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {GAMES.map((game) => (

@@ -8,6 +8,8 @@ const nextConfig: NextConfig = {
       // YouTube thumbnails (Phase 5 video hub)
       { protocol: "https", hostname: "i.ytimg.com" },
       { protocol: "https", hostname: "img.youtube.com" },
+      // PokéAPI official artwork (specimen cabinet)
+      { protocol: "https", hostname: "raw.githubusercontent.com" },
     ],
   },
 };

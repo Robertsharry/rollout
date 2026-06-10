@@ -107,7 +107,7 @@ export function Navbar({ user }: NavbarProps) {
             href="/donate"
             className={cn(
               buttonVariants({ variant: "ghost" }),
-              "hidden h-9 px-3 text-magenta hover:text-magenta sm:inline-flex",
+              "hidden h-9 px-3 text-oxblood-bright hover:text-oxblood-bright sm:inline-flex",
             )}
           >
             <Heart className="size-4" />
@@ -174,7 +174,7 @@ export function Navbar({ user }: NavbarProps) {
 
               <Link
                 href="/donate"
-                className="rounded-lg px-3 py-3 text-base font-medium text-magenta hover:bg-card"
+                className="rounded-lg px-3 py-3 text-base font-medium text-oxblood-bright hover:bg-card"
               >
                 Donate
               </Link>

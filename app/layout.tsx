@@ -1,5 +1,10 @@
 import type { Metadata, Viewport } from "next";
-import { Chakra_Petch, Inter, JetBrains_Mono } from "next/font/google";
+import {
+  Cutive_Mono,
+  Fraunces,
+  Pinyon_Script,
+  Source_Serif_4,
+} from "next/font/google";
 import { ViewTransitions } from "next-view-transitions";
 
 import "./globals.css";
@@ -15,29 +20,36 @@ import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { buildMetadata, organizationJsonLd, websiteJsonLd } from "@/lib/seo";
 
-const inter = Inter({
+const sourceSerif = Source_Serif_4({
   subsets: ["latin"],
-  variable: "--font-inter",
+  variable: "--font-source-serif",
   display: "swap",
 });
 
-const chakra = Chakra_Petch({
+const fraunces = Fraunces({
   subsets: ["latin"],
-  weight: ["500", "600", "700"],
-  variable: "--font-chakra",
+  variable: "--font-fraunces",
   display: "swap",
 });
 
-const jetbrains = JetBrains_Mono({
+const pinyon = Pinyon_Script({
   subsets: ["latin"],
-  variable: "--font-jetbrains",
+  weight: "400",
+  variable: "--font-pinyon",
+  display: "swap",
+});
+
+const cutive = Cutive_Mono({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-cutive",
   display: "swap",
 });
 
 export const metadata: Metadata = buildMetadata();
 
 export const viewport: Viewport = {
-  themeColor: "#0a0e1a",
+  themeColor: "#152b21",
   colorScheme: "dark",
 };
 
@@ -50,7 +62,7 @@ export default async function RootLayout({
     <ViewTransitions>
       <html
         lang="en"
-        className={`${inter.variable} ${chakra.variable} ${jetbrains.variable} dark`}
+        className={`${sourceSerif.variable} ${fraunces.variable} ${pinyon.variable} ${cutive.variable} dark`}
         suppressHydrationWarning
       >
         <body className="flex min-h-dvh flex-col bg-background text-foreground antialiased">
@@ -59,7 +71,7 @@ export default async function RootLayout({
 
           <a
             href="#main"
-            className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:rounded-md focus:bg-card focus:px-4 focus:py-2 focus:text-sm focus:ring-1 focus:ring-neon"
+            className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:rounded-md focus:bg-card focus:px-4 focus:py-2 focus:text-sm focus:ring-1 focus:ring-brass"
           >
             Skip to content
           </a>

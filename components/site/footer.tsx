@@ -16,18 +16,18 @@ const COLUMNS: FooterColumn[] = [
     links: GAMES.map((g) => ({ label: g.name, href: `/${g.slug}` })),
   },
   {
-    title: "Community",
+    title: "The House",
     links: SECTIONS.filter((s) => s.slug !== "donate").map((s) => ({
       label: s.title,
       href: `/${s.slug}`,
     })),
   },
   {
-    title: "Support",
+    title: "The Desk",
     links: [
-      { label: "Support us", href: "/donate" },
-      { label: "Profile", href: "/profile" },
-      { label: "Sign in", href: "/signin" },
+      { label: "Patrons' Ledger", href: "/donate" },
+      { label: "Your stateroom", href: "/profile" },
+      { label: "Check in", href: "/signin" },
     ],
   },
 ];
@@ -72,10 +72,10 @@ export function Footer() {
 
         <div className="mt-12 flex flex-col items-center justify-between gap-3 border-t border-border/60 pt-6 text-sm text-muted-foreground sm:flex-row">
           <p>
-            © {year} {SITE.name}. Built by the community, for the squad.
+            © {year} {SITE.name}. Built by the squad, for the squad.
           </p>
-          <p className="font-mono text-xs tracking-wider">
-            Not affiliated with any game publisher.
+          <p className="font-mono text-xs tracking-[0.12em]">
+            An independent house. Not affiliated with any game publisher.
           </p>
         </div>
       </Container>

@@ -34,7 +34,7 @@ export function AuthButton({ user, className }: AuthButtonProps) {
     <Link
       href="/profile"
       className={cn(
-        "group inline-flex items-center gap-2 rounded-full border border-border py-1 pr-3 pl-1 transition-colors hover:border-neon/50",
+        "group inline-flex items-center gap-2 rounded-full border border-border py-1 pr-3 pl-1 transition-colors hover:border-brass/60",
         className,
       )}
     >

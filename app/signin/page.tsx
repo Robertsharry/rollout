@@ -28,7 +28,7 @@ export default async function SignInPage() {
       <Container className="relative">
         <div
           aria-hidden
-          className="pointer-events-none absolute top-1/4 left-1/2 -z-10 size-[30rem] -translate-x-1/2 rounded-full bg-neon/15 blur-[120px]"
+          className="pointer-events-none absolute top-1/4 left-1/2 -z-10 size-[30rem] -translate-x-1/2 rounded-full bg-brass/15 blur-[120px]"
         />
         <div className="mx-auto w-full max-w-md">
           <div className="glass rounded-2xl p-8 text-center">
@@ -36,11 +36,11 @@ export default async function SignInPage() {
               <Logo />
             </div>
             <h1 className="mt-6 font-display text-2xl font-bold">
-              Welcome back, operator
+              Welcome back to the house
             </h1>
             <p className="mt-2 text-sm text-muted-foreground">
-              Sign in with Discord to post, climb the leaderboard, and join the
-              conversation.
+              Check in with Discord to post, climb the house board, and take
+              your seat at the table.
             </p>
 
             {isAuthConfigured ? (
@@ -56,9 +56,9 @@ export default async function SignInPage() {
             ) : (
               <div className="mt-7 rounded-lg border border-border bg-card/50 p-4 text-left text-sm text-muted-foreground">
                 Discord login isn’t wired up yet. Add{" "}
-                <code className="font-mono text-xs text-neon">AUTH_DISCORD_ID</code>{" "}
+                <code className="font-mono text-xs text-brass">AUTH_DISCORD_ID</code>{" "}
                 and{" "}
-                <code className="font-mono text-xs text-neon">
+                <code className="font-mono text-xs text-brass">
                   AUTH_DISCORD_SECRET
                 </code>{" "}
                 to enable it.
@@ -66,7 +66,7 @@ export default async function SignInPage() {
             )}
 
             <p className="mt-6 text-xs text-muted-foreground">
-              By continuing you agree to be cool to other members.
+              House rules are simple: be good to the squad.
             </p>
           </div>
 
@@ -76,7 +76,7 @@ export default async function SignInPage() {
               className={cn(buttonVariants({ variant: "ghost" }), "h-9")}
             >
               <ArrowLeft className="size-4" />
-              Back to base
+              Return to the foyer
             </Link>
           </div>
         </div>

@@ -44,38 +44,38 @@ export default async function ProfilePage() {
         <div className="glass relative overflow-hidden rounded-2xl p-8">
           <div
             aria-hidden
-            className="pointer-events-none absolute -top-20 right-0 size-64 rounded-full bg-neon/10 blur-3xl"
+            className="pointer-events-none absolute -top-20 right-0 size-64 rounded-full bg-brass/10 blur-3xl"
           />
 
           <div className="relative flex flex-col items-center gap-4 text-center sm:flex-row sm:text-left">
-            <Avatar className="size-20 ring-2 ring-neon/40">
+            <Avatar className="size-20 ring-2 ring-brass/50">
               <AvatarImage src={user.image ?? undefined} alt="" />
               <AvatarFallback className="text-xl">{initials}</AvatarFallback>
             </Avatar>
             <div>
               <h1 className="font-display text-2xl font-bold">
-                {user.name ?? "Operator"}
+                {user.name ?? "Member of the house"}
               </h1>
               {user.email ? (
                 <p className="text-sm text-muted-foreground">{user.email}</p>
               ) : null}
               <div className="mt-2 flex flex-wrap justify-center gap-2 sm:justify-start">
                 <Badge variant="secondary" className="gap-1">
-                  <ShieldCheck className="size-3.5 text-neon" />
-                  Member
+                  <ShieldCheck className="size-3.5 text-brass" />
+                  Member in good standing
                 </Badge>
               </div>
             </div>
           </div>
 
           <div className="relative mt-8 grid gap-4 sm:grid-cols-2">
-            <InfoCard label="Status" value="Active" />
-            <InfoCard label="Joined via" value="Discord" />
+            <InfoCard label="Standing" value="Good" />
+            <InfoCard label="Checked in via" value="Discord" />
           </div>
 
           <div className="relative mt-8 flex flex-col gap-3 border-t border-border/60 pt-6 sm:flex-row sm:items-center sm:justify-between">
             <p className="text-sm text-muted-foreground">
-              Profile customization, badges, and post history arrive in Phase 2.
+              Stateroom flair, plaques, and post history arrive in Phase 2.
             </p>
             <form action={signOutAction}>
               <button

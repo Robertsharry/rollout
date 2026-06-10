@@ -25,8 +25,8 @@ export function SectionHeading({
       )}
     >
       {kicker ? (
-        <span className="inline-flex items-center gap-2 font-mono text-xs font-medium tracking-[0.25em] text-neon uppercase">
-          <span className="size-1.5 rounded-full bg-neon animate-pulse-glow" />
+        <span className="inline-flex items-center gap-2 font-mono text-xs font-medium tracking-[0.2em] text-gold-light uppercase">
+          <span className="size-1.5 rotate-45 bg-brass animate-pulse-glow" />
           {kicker}
         </span>
       ) : null}

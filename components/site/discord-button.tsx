@@ -14,7 +14,7 @@ interface DiscordButtonProps {
   label?: string;
 }
 
-/** Brand-blurple "Join the Discord" CTA. Opens the invite in a new tab. */
+/** House brass "join the Discord" CTA. Opens the invite in a new tab. */
 export function DiscordButton({
   className,
   label = "Join the Discord",
@@ -25,7 +25,7 @@ export function DiscordButton({
       target="_blank"
       rel="noopener noreferrer"
       className={cn(
-        "inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-[#5865F2] px-6 text-sm font-semibold text-white shadow-lg shadow-[#5865F2]/20 transition-colors hover:bg-[#4752c4] focus-visible:ring-2 focus-visible:ring-[#5865F2]/50 focus-visible:outline-none",
+        "inline-flex h-11 items-center justify-center gap-2.5 rounded-md bg-primary px-6 text-sm font-semibold tracking-wide text-primary-foreground transition-all hover:brightness-110 focus-visible:ring-2 focus-visible:ring-ring/60 focus-visible:outline-none",
         className,
       )}
     >

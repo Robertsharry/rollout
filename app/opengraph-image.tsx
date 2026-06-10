@@ -6,6 +6,12 @@ export const alt = `${SITE.name} — ${SITE.tagline}`;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
+const GREEN = "#163125";
+const PARCHMENT = "#EFE6CF";
+const BRASS = "#C9A14E";
+const GOLD = "#E3C77E";
+const SAGE = "#B9C9B4";
+
 export default function OpengraphImage() {
   return new ImageResponse(
     (
@@ -15,64 +21,125 @@ export default function OpengraphImage() {
           height: "100%",
           display: "flex",
           flexDirection: "column",
-          justifyContent: "space-between",
-          padding: 80,
-          background:
-            "radial-gradient(900px 500px at 80% -10%, rgba(34,211,238,0.18), transparent), radial-gradient(700px 500px at 0% 110%, rgba(244,63,151,0.18), transparent), #0a0e1a",
-          color: "#f2f5fb",
-          fontFamily: "sans-serif",
+          alignItems: "center",
+          justifyContent: "center",
+          background: GREEN,
+          color: PARCHMENT,
+          fontFamily: "Georgia, serif",
+          position: "relative",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-          <div
-            style={{
-              width: 14,
-              height: 14,
-              borderRadius: 999,
-              background: "#22d3ee",
-              boxShadow: "0 0 24px #22d3ee",
-            }}
-          />
-          <div
-            style={{
-              fontSize: 28,
-              fontWeight: 700,
-              letterSpacing: 8,
-            }}
-          >
-            {SITE.name}
-          </div>
-        </div>
+        <div
+          style={{
+            position: "absolute",
+            top: 28,
+            left: 28,
+            right: 28,
+            bottom: 28,
+            border: `2px solid ${BRASS}`,
+            display: "flex",
+          }}
+        />
+        <div
+          style={{
+            position: "absolute",
+            top: 38,
+            left: 38,
+            right: 38,
+            bottom: 38,
+            border: `1px solid ${BRASS}80`,
+            display: "flex",
+          }}
+        />
 
-        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-          <div
-            style={{
-              fontSize: 84,
-              fontWeight: 800,
-              lineHeight: 1.02,
-              letterSpacing: -2,
-              maxWidth: 900,
-            }}
-          >
-            Your squad’s command center.
-          </div>
-          <div style={{ fontSize: 30, color: "#9aa4b6", maxWidth: 820 }}>
-            Tutorials, loadouts, leaderboards & forums — built by the squad.
-          </div>
+        <div
+          style={{
+            fontSize: 30,
+            fontStyle: "italic",
+            color: BRASS,
+          }}
+        >
+          The
+        </div>
+        <div
+          style={{
+            fontSize: 130,
+            fontWeight: 700,
+            letterSpacing: 14,
+            lineHeight: 1,
+            marginTop: 4,
+          }}
+        >
+          ROLLOUT
         </div>
 
         <div
           style={{
             display: "flex",
-            gap: 28,
-            fontSize: 22,
-            letterSpacing: 4,
-            color: "#22d3ee",
-            fontWeight: 700,
+            alignItems: "center",
+            gap: 14,
+            marginTop: 26,
           }}
         >
-          {GAMES.map((game) => (
-            <div key={game.slug}>{game.short}</div>
+          <div style={{ width: 130, height: 1, background: BRASS, display: "flex" }} />
+          <div
+            style={{
+              width: 12,
+              height: 12,
+              background: GOLD,
+              transform: "rotate(45deg)",
+              display: "flex",
+            }}
+          />
+          <div style={{ width: 130, height: 1, background: BRASS, display: "flex" }} />
+        </div>
+
+        <div
+          style={{
+            fontSize: 28,
+            letterSpacing: 12,
+            color: GOLD,
+            marginTop: 26,
+          }}
+        >
+          GAMING HOUSE & OUTFITTERS
+        </div>
+        <div
+          style={{
+            fontSize: 20,
+            letterSpacing: 6,
+            color: SAGE,
+            marginTop: 12,
+          }}
+        >
+          EST. 2026 · ON THE RIVER · ALL HANDS WELCOME
+        </div>
+
+        <div
+          style={{
+            display: "flex",
+            gap: 34,
+            fontSize: 21,
+            letterSpacing: 4,
+            color: PARCHMENT,
+            marginTop: 44,
+          }}
+        >
+          {GAMES.map((game, i) => (
+            <div key={game.slug} style={{ display: "flex", gap: 34, alignItems: "center" }}>
+              {i > 0 ? (
+                <div
+                  style={{
+                    width: 8,
+                    height: 8,
+                    background: BRASS,
+                    transform: "rotate(45deg)",
+                    display: "flex",
+                  }}
+                />
+              ) : null}
+              <div style={{ display: "flex" }}>{game.short}</div>
+            </div>
           ))}
         </div>
       </div>

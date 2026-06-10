@@ -16,20 +16,20 @@ export default function Error({
   return (
     <div className="grid min-h-[70vh] place-items-center px-5">
       <div className="glass max-w-md rounded-2xl p-8 text-center">
-        <div className="font-mono text-xs tracking-widest text-destructive uppercase">
-          System fault
+        <div className="font-mono text-xs tracking-[0.18em] text-destructive uppercase">
+          Trouble below decks
         </div>
         <h1 className="mt-3 font-display text-2xl font-bold">
-          Something went sideways
+          Something jammed in the machinery
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          We hit an unexpected error. Try again, and if it keeps happening, ping us
-          in the Discord.
+          Give it another turn. If it keeps up, flag down the crew in the
+          Discord.
         </p>
         <button
           type="button"
           onClick={reset}
-          className="mt-6 inline-flex h-11 items-center justify-center rounded-lg bg-neon px-6 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
+          className="mt-6 inline-flex h-11 items-center justify-center rounded-md bg-primary px-6 text-sm font-semibold text-primary-foreground transition-all hover:brightness-110"
         >
           Try again
         </button>

@@ -37,12 +37,12 @@ export function ComingSoon({
             <Icon className="size-8" />
           </span>
 
-          <span className="mt-6 inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-3 py-1 font-mono text-xs tracking-widest text-muted-foreground uppercase">
+          <span className="mt-6 inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-3.5 py-1.5 font-mono text-xs tracking-[0.18em] text-foreground/85 uppercase">
             <span
               className="size-1.5 rounded-full animate-pulse-glow"
               style={{ background: accent }}
             />
-            Coming in {phase}
+            Opening in {phase}
           </span>
 
           <h1 className="mt-6 font-display text-4xl font-bold tracking-tight sm:text-5xl">
@@ -59,7 +59,7 @@ export function ComingSoon({
               className={cn(buttonVariants({ variant: "outline" }), "h-11 px-6")}
             >
               <ArrowLeft className="size-4" />
-              Back to base
+              Return to the foyer
             </Link>
           </div>
         </div>

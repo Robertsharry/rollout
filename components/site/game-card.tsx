@@ -60,7 +60,7 @@ export function GameCard({ game, className }: GameCardProps) {
         {game.highlights.map((h) => (
           <span
             key={h}
-            className="rounded-full border border-border/70 bg-background/40 px-2.5 py-1 font-mono text-[11px] tracking-wider text-muted-foreground uppercase"
+            className="rounded-full border border-border/70 bg-background/40 px-2.5 py-1 font-mono text-[11px] tracking-[0.1em] text-foreground/80 uppercase"
           >
             {h}
           </span>

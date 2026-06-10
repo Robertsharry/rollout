@@ -12,17 +12,18 @@ export default function NotFound() {
           404
         </div>
         <h1 className="mt-4 font-display text-2xl font-bold">
-          Position not found
+          No such stateroom
         </h1>
         <p className="mx-auto mt-2 max-w-sm text-sm text-muted-foreground">
-          This sector’s off the map. Let’s get you back to base.
+          That door is not on the ship’s plan. Let us walk you back to the
+          foyer.
         </p>
         <Link
           href="/"
           className={cn(buttonVariants({ variant: "outline" }), "mt-7 h-11 px-6")}
         >
           <ArrowLeft className="size-4" />
-          Back to base
+          Return to the foyer
         </Link>
       </div>
     </div>
