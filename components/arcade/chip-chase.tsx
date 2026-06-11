@@ -621,7 +621,12 @@ const TOUCH_DIRS: { label: string; dir: Dir; area: string }[] = [
   { label: "▶", dir: DIRS[3], area: "right" },
 ];
 
-export function ChipChase() {
+interface ChalkProp {
+  signedIn: boolean;
+  action: (formData: FormData) => Promise<void>;
+}
+
+export function ChipChase({ chalk }: { chalk?: ChalkProp }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const gameRef = useRef<ChipChaseGame | null>(null);
   const [hud, setHud] = useState<HudState>({
@@ -679,6 +684,7 @@ export function ChipChase() {
           gameRef.current.state === "paused" ? "playing" : "paused",
         )
       }
+      chalk={chalk}
       touch={
         coarse ? (
           <div className="grid grid-cols-3 gap-2" style={{ gridTemplateAreas: '". up ." "left down right"' }}>

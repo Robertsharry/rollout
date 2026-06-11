@@ -545,7 +545,12 @@ class TopsideGame {
   }
 }
 
-export function Topside() {
+interface ChalkProp {
+  signedIn: boolean;
+  action: (formData: FormData) => Promise<void>;
+}
+
+export function Topside({ chalk }: { chalk?: ChalkProp }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const gameRef = useRef<TopsideGame | null>(null);
   const [hud, setHud] = useState<HudState>({
@@ -591,6 +596,7 @@ export function Topside() {
           gameRef.current.state === "paused" ? "playing" : "paused",
         )
       }
+      chalk={chalk}
       touch={
         coarse ? (
           <div className="flex items-center justify-between gap-3">

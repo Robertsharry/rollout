@@ -22,6 +22,7 @@ The site is one concept: the **S.S. Rollout**, a Victorian riverboat gaming hous
 - **YouTube ids must be verified before shipping** (oEmbed 200 + `maxresdefault.jpg` exists). See `lib/theater.ts`.
 - `lib/ufc.ts` is the owner's hand edited fight book, updated weekly by a human. Keep it human friendly; never auto generate over it.
 - Game guides avoid invented specifics (records, stats, item names you cannot verify). Empty fields beat wrong facts.
+- Community manuscripts (`/guides`) are read by a human before printing — never auto publish, never bypass the review desk.
 - No borrowed IP in the Penny Arcade: original games, original names, original art.
 
 ## Engineering

@@ -16,6 +16,11 @@ interface CabinetProps {
   children: React.ReactNode;
   /** Optional touch control cluster rendered under the bezel. */
   touch?: React.ReactNode;
+  /** When set, the game over screen offers to chalk the score to the House Board. */
+  chalk?: {
+    signedIn: boolean;
+    action: (formData: FormData) => Promise<void>;
+  };
 }
 
 function HudPlaque({ label, value }: { label: string; value: string }) {
@@ -41,6 +46,7 @@ export function Cabinet({
   onTogglePause,
   children,
   touch,
+  chalk,
 }: CabinetProps) {
   return (
     <div className="mx-auto w-full max-w-xl">
@@ -147,6 +153,27 @@ export function Cabinet({
                   >
                     Play again ◆ enter
                   </button>
+                  {chalk && hud.score > 0 ? (
+                    chalk.signedIn ? (
+                      <form action={chalk.action}>
+                        <input type="hidden" name="title" value={title} />
+                        <input type="hidden" name="value" value={hud.score} />
+                        <button
+                          type="submit"
+                          className="border border-brass/60 bg-[#241A12]/90 px-5 py-2 font-mono text-[11px] tracking-[0.18em] text-sage uppercase transition-colors hover:border-gold-light hover:text-gold-light"
+                        >
+                          Chalk it onto the House Board ☞
+                        </button>
+                      </form>
+                    ) : (
+                      <Link
+                        href="/signin"
+                        className="font-mono text-[11px] tracking-[0.16em] text-sage uppercase underline underline-offset-4 hover:text-gold-light"
+                      >
+                        Check in to chalk this onto the House Board
+                      </Link>
+                    )
+                  ) : null}
                 </>
               ) : null}
             </div>

@@ -1,4 +1,6 @@
+import { chalkArcadeBest } from "@/app/arcade/actions";
 import { Topside } from "@/components/arcade/topside";
+import { currentUser } from "@/lib/auth-helpers";
 import { JsonLd } from "@/components/site/json-ld";
 import { Container, Section } from "@/components/site/section";
 import { breadcrumbJsonLd, buildMetadata } from "@/lib/seo";
@@ -10,7 +12,8 @@ export const metadata = buildMetadata({
   path: "/arcade/topside",
 });
 
-export default function TopsidePage() {
+export default async function TopsidePage() {
+  const user = await currentUser();
   return (
     <>
       <JsonLd
@@ -22,7 +25,7 @@ export default function TopsidePage() {
       />
       <Section spacing="none" className="pt-28 pb-20">
         <Container>
-          <Topside />
+          <Topside chalk={{ signedIn: Boolean(user), action: chalkArcadeBest }} />
         </Container>
       </Section>
     </>
