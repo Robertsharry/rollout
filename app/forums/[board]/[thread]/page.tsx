@@ -77,6 +77,7 @@ export default async function ThreadPage({ params }: ThreadPageProps) {
               <AuthorChip
                 author={thread.author}
                 meta={formatRelative(thread.createdAt)}
+                linkToRecord
               />
             </div>
             <PostBody body={thread.body} className="mt-4" />
@@ -89,6 +90,7 @@ export default async function ThreadPage({ params }: ThreadPageProps) {
                 <AuthorChip
                   author={reply.author}
                   meta={formatRelative(reply.createdAt)}
+                  linkToRecord
                 />
                 <PostBody body={reply.body} className="mt-3" />
               </article>

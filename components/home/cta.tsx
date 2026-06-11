@@ -26,6 +26,8 @@ export function CtaBand() {
             <p className="relative mx-auto mt-4 max-w-xl text-muted-foreground md:text-lg">
               Step aboard the Discord, claim your member card, and start
               posting. Free to join, ours to keep, built for the long haul.
+              The first 100 members are entered in the ship&apos;s book as
+              Plank Owners — original crew, on the record forever.
             </p>
             <div className="relative mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <DiscordButton className="h-12 px-7 text-base" />

@@ -54,7 +54,7 @@ export default async function ReviewDeskPage() {
                 <span className="font-display text-[11px] font-semibold tracking-[0.2em] text-gold-light uppercase">
                   {GAME_NAMES[m.game] ?? m.game}
                 </span>
-                <AuthorChip author={m.author} meta={formatRelative(m.createdAt)} />
+                <AuthorChip author={m.author} meta={formatRelative(m.createdAt)} linkToRecord />
               </div>
               <div className="p-5 sm:p-6">
                 <h2 className="font-display text-xl font-bold tracking-tight">

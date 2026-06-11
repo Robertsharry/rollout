@@ -68,6 +68,9 @@ export default async function SignInPage() {
             <p className="mt-6 text-xs text-muted-foreground">
               House rules are simple: be good to the squad.
             </p>
+            <p className="mt-2 font-mono text-[11px] tracking-[0.12em] text-gold-light uppercase">
+              ⚓ The first 100 aboard are entered as Plank Owners — permanently
+            </p>
           </div>
 
           <div className="mt-6 text-center">

@@ -190,9 +190,3 @@ export const NAV: NavItem[] = [
   { label: "Engine Room", href: "/learn", icon: BookOpen },
 ];
 
-export const COMMUNITY_STATS = [
-  { label: "Members aboard", value: 4200, suffix: "+" },
-  { label: "Guides written", value: 180, suffix: "+" },
-  { label: "Tables open", value: 4, suffix: "" },
-  { label: "On deck now", value: 312, suffix: "" },
-];

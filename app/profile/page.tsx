@@ -5,7 +5,10 @@ import { auth } from "@/auth";
 import { Container, Section } from "@/components/site/section";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Link } from "next-view-transitions";
+
 import { signOutAction } from "@/lib/auth-actions";
+import { db } from "@/lib/db";
 import { isAuthConfigured } from "@/lib/env";
 import { buildMetadata } from "@/lib/seo";
 
@@ -37,6 +40,18 @@ export default async function ProfilePage() {
 
   const user = session.user;
   const initials = (user.name ?? "U").slice(0, 2).toUpperCase();
+
+  let handle: string | null = null;
+  if (db && session.user.id) {
+    const { profiles } = await import("@/lib/db/schema");
+    const { eq } = await import("drizzle-orm");
+    const [row] = await db
+      .select({ handle: profiles.handle })
+      .from(profiles)
+      .where(eq(profiles.userId, session.user.id))
+      .limit(1);
+    handle = row?.handle ?? null;
+  }
 
   return (
     <Section spacing="none" className="pt-28 pb-24">
@@ -75,7 +90,16 @@ export default async function ProfilePage() {
 
           <div className="relative mt-8 flex flex-col gap-3 border-t border-border/60 pt-6 sm:flex-row sm:items-center sm:justify-between">
             <p className="text-sm text-muted-foreground">
-              Stateroom flair, plaques, and post history arrive in Phase 2.
+              {handle ? (
+                <Link
+                  href={`/crew/${handle}`}
+                  className="text-brass underline underline-offset-4 hover:text-gold-light"
+                >
+                  View your service record — ribbons, manuscripts, and runs
+                </Link>
+              ) : (
+                "Your service record appears once your handle is minted."
+              )}
             </p>
             <form action={signOutAction}>
               <button

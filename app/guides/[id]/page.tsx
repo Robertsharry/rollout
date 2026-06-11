@@ -85,6 +85,7 @@ export default async function CommunityGuidePage({ params }: GuidePageProps) {
               </h1>
               <div className="mt-3">
                 <AuthorChip
+                  linkToRecord
                   author={guide.author}
                   meta={
                     guide.reviewedAt

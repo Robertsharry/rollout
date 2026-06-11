@@ -172,6 +172,7 @@ export default async function LeaderboardPage({ searchParams }: BoardPageProps) 
                             <AuthorChip
                               author={entry.author}
                               meta={formatRelative(entry.createdAt)}
+                              linkToRecord
                             />
                             <span className="font-mono text-[11px] tracking-[0.1em] text-gold-light uppercase">
                               {GAME_NAMES[entry.game] ?? entry.game}

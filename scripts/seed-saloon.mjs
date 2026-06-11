@@ -83,8 +83,8 @@ for (const [board, title, body] of WELCOMES) {
 
 // a couple of house board entries so the felt is not bare
 const SCORES = [
-  ["penny-arcade", "Chip Chase — house record to beat", 4210],
-  ["helldivers", "First squad clear of the season, difficulty 9", null],
+  // a standing challenge, not a claim — the house does not invent runs
+  ["penny-arcade", "House bounty — beat this at Chip Chase", 4210],
 ];
 for (const [game, label, value] of SCORES) {
   const dupe = await sql`select 1 from score where label = ${label}`;
