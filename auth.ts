@@ -5,6 +5,7 @@ import Discord from "next-auth/providers/discord";
 import { db } from "@/lib/db";
 import { accounts, profiles, sessions, users, verificationTokens } from "@/lib/db/schema";
 import { isAuthConfigured } from "@/lib/env";
+import { mintHandle } from "@/lib/handles";
 
 // Use the database adapter only when a DB is present; otherwise fall back to
 // stateless JWT sessions so Discord login still works pre-database.
@@ -22,13 +23,26 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   session: { strategy: (adapter ? "database" : "jwt") as "database" | "jwt" },
   providers: [Discord],
   pages: { signIn: "/signin" },
+  callbacks: {
+    // The community features need to know who is talking.
+    session({ session, user, token }) {
+      if (user?.id) session.user.id = user.id;
+      else if (token?.sub) session.user.id = token.sub;
+      return session;
+    },
+  },
   events: {
-    // Seed a profile row the first time a user is created (DB mode only).
+    // First check in: seed a profile with a unique mention handle.
     async createUser({ user }) {
       if (db && user.id) {
+        const handle = await mintHandle(db, user.name ?? "patron");
         await db
           .insert(profiles)
-          .values({ userId: user.id, displayName: user.name ?? null })
+          .values({
+            userId: user.id,
+            displayName: user.name ?? null,
+            handle,
+          })
           .onConflictDoNothing();
       }
     },
