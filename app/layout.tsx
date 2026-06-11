@@ -9,6 +9,7 @@ import { ViewTransitions } from "next-view-transitions";
 
 import "./globals.css";
 
+import { auth } from "@/auth";
 import { getSessionUser } from "@/auth";
 import { CustomCursor } from "@/components/effects/custom-cursor";
 import { LenisProvider } from "@/components/effects/lenis-provider";
@@ -58,6 +59,19 @@ export default async function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   const user = await getSessionUser();
 
+  // Ring the bell for whoever is checked in.
+  let unread = 0;
+  if (user) {
+    const [{ unreadCounts }, session] = await Promise.all([
+      import("@/lib/community"),
+      auth().catch(() => null),
+    ]);
+    if (session?.user?.id) {
+      const counts = await unreadCounts(session.user.id).catch(() => null);
+      if (counts) unread = counts.notifications + counts.messages;
+    }
+  }
+
   return (
     <ViewTransitions>
       <html
@@ -78,7 +92,7 @@ export default async function RootLayout({
 
           <TooltipProvider>
             <LenisProvider>
-              <Navbar user={user} />
+              <Navbar user={user} unread={unread} />
               <main id="main" className="flex flex-1 flex-col">
                 {children}
               </main>

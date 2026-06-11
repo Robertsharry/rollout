@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { ChevronDown, Heart, Menu, X } from "lucide-react";
+import { Bell, ChevronDown, Heart, Menu, X } from "lucide-react";
 import { Link } from "next-view-transitions";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -20,13 +20,15 @@ import { cn } from "@/lib/utils";
 
 interface NavbarProps {
   user: SessionUser | null;
+  /** Unread bells + private lines, shown on the mail room icon. */
+  unread?: number;
 }
 
 function isActive(pathname: string, href: string) {
   return href === "/" ? pathname === "/" : pathname.startsWith(href);
 }
 
-export function Navbar({ user }: NavbarProps) {
+export function Navbar({ user, unread = 0 }: NavbarProps) {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
@@ -113,6 +115,22 @@ export function Navbar({ user }: NavbarProps) {
             <Heart className="size-4" />
             Donate
           </Link>
+          {user ? (
+            <Link
+              href="/inbox"
+              aria-label={
+                unread > 0 ? `Mail room — ${unread} unread` : "Mail room"
+              }
+              className="relative grid size-9 place-items-center rounded-md text-muted-foreground transition-colors hover:text-foreground"
+            >
+              <Bell className="size-5" />
+              {unread > 0 ? (
+                <span className="absolute top-1 right-1 grid min-w-4 place-items-center rounded-full bg-oxblood-bright px-1 font-mono text-[10px] leading-4 font-bold text-white">
+                  {unread > 9 ? "9+" : unread}
+                </span>
+              ) : null}
+            </Link>
+          ) : null}
           <div className="hidden sm:block">
             <AuthButton user={user} />
           </div>
