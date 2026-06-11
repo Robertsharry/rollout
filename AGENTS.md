@@ -22,6 +22,7 @@ The site is one concept: the **S.S. Rollout**, a Victorian riverboat gaming hous
 - **YouTube ids must be verified before shipping** (oEmbed 200 + `maxresdefault.jpg` exists). See `lib/theater.ts`.
 - `lib/ufc.ts` is the owner's hand edited fight book, updated weekly by a human. Keep it human friendly; never auto generate over it.
 - Game guides avoid invented specifics (records, stats, item names you cannot verify). Empty fields beat wrong facts.
+- `lib/pokedex-data.json` is generated from PokéAPI by `scripts/build-pokedex.mjs`. Rerun the script when a new generation lands; never hand edit, never fetch PokéAPI at runtime.
 - Community manuscripts (`/guides`) are read by a human before printing — never auto publish, never bypass the review desk.
 - No borrowed IP in the Penny Arcade: original games, original names, original art.
 
@@ -29,6 +30,7 @@ The site is one concept: the **S.S. Rollout**, a Victorian riverboat gaming hous
 - Features degrade gracefully when env vars are missing (`lib/env.ts` flags). Public pages must always render with zero credentials.
 - Stripe: test keys locally, live keys only as Vercel env vars. Secrets never go in the repo.
 - Strict `react-hooks/set-state-in-effect` rule is on — no synchronous setState in effects (use `useSyncExternalStore` or defer).
+- Phones matter: pages must not scroll sideways at 375px. Watch `min-width: auto` on grid and flex items — give grid children `min-w-0` (the station grids use `[&>*]:min-w-0`) when text inside can run long.
 
 ## Workflow
 - Commits: **concise, plain language a non technical reader understands**, in sensible chunks. Push to `main`.

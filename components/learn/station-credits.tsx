@@ -62,7 +62,7 @@ export function StationCredits() {
 
   return (
     <div className="space-y-8">
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid gap-6 lg:grid-cols-2 [&>*]:min-w-0">
         <div>
           <CodeBlock
             title="figure.html — a picture with a caption a reader can hear"
@@ -143,7 +143,7 @@ export function StationCredits() {
         </div>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid gap-6 lg:grid-cols-2 [&>*]:min-w-0">
         <div>
           <CodeBlock
             title="icon-button.html — a glyph with a label a reader can hear"

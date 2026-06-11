@@ -58,7 +58,7 @@ export function StationForms() {
     lit(id) ? "ring-2 ring-gold-light" : "";
 
   return (
-    <div className="grid gap-6 lg:grid-cols-2">
+    <div className="grid gap-6 lg:grid-cols-2 [&>*]:min-w-0">
       <CodeBlock
         title="donate.html — a form is just an envelope"
         lines={lines}

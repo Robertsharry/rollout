@@ -53,7 +53,7 @@ export function StationCargo() {
     );
 
   return (
-    <div className="grid gap-6 lg:grid-cols-2">
+    <div className="grid gap-6 lg:grid-cols-2 [&>*]:min-w-0">
       <div>
         <CodeBlock
           title="cargo.css — one word moves every crate"
@@ -174,7 +174,7 @@ export function StationCargo() {
         </p>
         <div
           className={cn(
-            "mt-2 h-[340px] rounded-md border-2 p-3 transition-colors",
+            "mt-2 h-[340px] overflow-hidden rounded-md border-2 p-3 transition-colors",
             active === "flex" ? "border-gold-light" : "border-brass/40",
           )}
           style={{
@@ -193,7 +193,7 @@ export function StationCargo() {
               key={crate.label}
               className="grid shrink-0 place-items-center rounded-sm border-2 border-brass/60 bg-mahogany font-display text-lg font-bold text-gold-light transition-all"
               style={{
-                width: direction === "row" ? 64 : 120,
+                width: direction === "row" ? "min(64px, 17%)" : "min(120px, 60%)",
                 height: crate.h,
               }}
             >

@@ -149,7 +149,7 @@ export default async function CrewPage({ params }: CrewPageProps) {
 
           {/* the record proper */}
           <div className="mt-6 grid gap-6 md:grid-cols-2">
-            <section className="glass rounded-lg p-5">
+            <section className="glass min-w-0 rounded-lg p-5">
               <h2 className="font-mono text-[11px] tracking-[0.2em] text-gold-light uppercase">
                 In print · {record.counts.guides}
               </h2>
@@ -178,7 +178,7 @@ export default async function CrewPage({ params }: CrewPageProps) {
               </ul>
             </section>
 
-            <section className="glass rounded-lg p-5">
+            <section className="glass min-w-0 rounded-lg p-5">
               <h2 className="font-mono text-[11px] tracking-[0.2em] text-gold-light uppercase">
                 On the board · {record.counts.scores}
               </h2>
@@ -200,7 +200,7 @@ export default async function CrewPage({ params }: CrewPageProps) {
               </ul>
             </section>
 
-            <section className="glass rounded-lg p-5 md:col-span-2">
+            <section className="glass min-w-0 rounded-lg p-5 md:col-span-2">
               <h2 className="font-mono text-[11px] tracking-[0.2em] text-gold-light uppercase">
                 In the saloon · {record.counts.threads}
               </h2>

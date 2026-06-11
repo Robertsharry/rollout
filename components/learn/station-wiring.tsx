@@ -166,7 +166,7 @@ export function StationWiring() {
     "Hover any line of code, or any part of the stage — both light up together.";
 
   return (
-    <div className="grid gap-6 lg:grid-cols-2">
+    <div className="grid gap-6 lg:grid-cols-2 [&>*]:min-w-0">
       <div>
         <CodeBlock
           title="theater.js — state on top, recipes below"

@@ -95,7 +95,7 @@ export function StationConditions() {
   const branchActive = (branch: Status) => status === branch;
 
   return (
-    <div className="grid gap-6 lg:grid-cols-2">
+    <div className="grid gap-6 lg:grid-cols-2 [&>*]:min-w-0">
       <div>
         <CodeBlock
           title="stage.tsx — the conditional under the hood"

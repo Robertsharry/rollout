@@ -62,7 +62,7 @@ export function StationBones() {
   );
 
   return (
-    <div className="grid gap-6 lg:grid-cols-2">
+    <div className="grid gap-6 lg:grid-cols-2 [&>*]:min-w-0">
       <CodeBlock
         title="theater/stage.tsx — simplified"
         lines={LINES}

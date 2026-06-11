@@ -9,7 +9,7 @@ The squad's gaming house on the river — a community site for **Pokémon, UFC, 
 | Deck | Route | Status |
 | --- | --- | --- |
 | Grand Foyer (home) + porter's tour for new visitors | `/` | ✅ live |
-| Specimen Cabinet — all 9 gens, 3 full Kanto guides | `/pokemon` | ✅ live |
+| Specimen Cabinet — full Pokédex (all 1025) + team builder with coverage analysis + Kanto guides | `/pokemon` | ✅ live |
 | Sporting Club — Freedom 250 card + UFC 6 info | `/ufc` | ✅ live, hand updated weekly |
 | Munitions Deck — loadouts per front | `/helldivers` | ✅ live |
 | Cargo Hold — region manifests | `/arc-raiders` | ✅ live |
@@ -63,6 +63,7 @@ Some content is meant to be edited by the owner, not generated:
 - **`lib/ufc.ts`** — the fight card + game info. Plain instructions at the top; update weekly.
 - **`lib/theater.ts`** — the Theater program. Every YouTube id must be verified (oEmbed + maxres poster) before it ships.
 - **`content/pokemon/*.mdx`** — field guides. Drop a file, it's live.
+- **`lib/pokedex-data.json`** — the full Pokédex dataset (1025 entries). Generated once by `node scripts/build-pokedex.mjs`; rerun the script when a new generation lands, never hand edit.
 
 ## Project structure
 
@@ -81,7 +82,8 @@ auth.ts           Auth.js v5 (Discord)
 ## Roadmap
 
 - ✅ Foundation, riverboat design system, SEO
-- ✅ Pokémon cabinet (9 gens) + 3 Kanto guides · UFC live card · Helldivers · Arc Raiders
+- ✅ Pokémon: full Pokédex + team builder (shareable squads, live coverage analysis) + 3 Kanto guides · UFC live card · Helldivers · Arc Raiders
+- ✅ Mobile pass: every deck verified at phone width, no sideways scroll
 - ✅ Theater · Arcade · Engine Room (17 stations: HTML, CSS incl. flexbox/grid/responsive, JS incl. timers, free build)
 - ✅ Donations (Stripe, test mode)
 - ✅ **Phase 2:** Saloon forums, @mentions with notifications, House Board, private messages

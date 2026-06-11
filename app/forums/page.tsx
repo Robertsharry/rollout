@@ -69,7 +69,7 @@ export default async function ForumsPage() {
             </div>
           ) : (
             <div className="grid gap-8 lg:grid-cols-[1.5fr_1fr]">
-              <div className="space-y-4">
+              <div className="min-w-0 space-y-4">
                 {BOARDS.map((board) => {
                   const Icon = board.icon;
                   const summary = summaryByBoard.get(board.slug);
@@ -116,7 +116,7 @@ export default async function ForumsPage() {
                 })}
               </div>
 
-              <Reveal>
+              <Reveal className="min-w-0">
                 <aside className="glass rounded-lg p-5">
                   <h2 className="font-mono text-[11px] tracking-[0.2em] text-gold-light uppercase">
                     Fresh from the felt

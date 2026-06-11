@@ -74,7 +74,7 @@ function RequisitionSlip({ slip }: { slip: Requisition }) {
                 aria-hidden
                 className="grow border-b border-dotted border-[#1B1611]/60"
               />
-              <dd className="shrink-0 text-right font-semibold">{value}</dd>
+              <dd className="min-w-0 text-right font-semibold">{value}</dd>
             </div>
           ))}
         </dl>

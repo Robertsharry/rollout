@@ -24,7 +24,7 @@ export default async function SignInPage() {
   if (session?.user) redirect("/profile");
 
   return (
-    <Section spacing="lg" className="grid min-h-[82vh] place-items-center">
+    <Section spacing="lg" className="grid min-h-[82vh] place-items-center overflow-hidden">
       <Container className="relative">
         <div
           aria-hidden

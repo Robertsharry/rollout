@@ -67,7 +67,7 @@ export function StationStageManager() {
   ];
 
   return (
-    <div className="grid gap-6 lg:grid-cols-2">
+    <div className="grid gap-6 lg:grid-cols-2 [&>*]:min-w-0">
       <div>
         <CodeBlock
           title="stage-manager.js — watch each cue fire"

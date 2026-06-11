@@ -75,7 +75,7 @@ export function StationSignposts() {
   };
 
   return (
-    <div className="grid gap-6 lg:grid-cols-2">
+    <div className="grid gap-6 lg:grid-cols-2 [&>*]:min-w-0">
       <CodeBlock
         title="page.html — the page as named rooms"
         lines={LINES}

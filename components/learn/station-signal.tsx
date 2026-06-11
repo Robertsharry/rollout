@@ -91,7 +91,7 @@ export function StationSignal() {
   const currentIdx = stageIndex(stage);
 
   return (
-    <div className="grid gap-6 lg:grid-cols-2">
+    <div className="grid gap-6 lg:grid-cols-2 [&>*]:min-w-0">
       <div>
         <CodeBlock
           title="donate.ts — one form, two sides of the wire"
