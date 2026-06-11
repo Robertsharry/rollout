@@ -51,10 +51,10 @@ export const GAMES: Game[] = [
     short: "POKÉMON",
     wing: "Specimens",
     blurb:
-      "Master every starter, build teams that win, and learn the type chart cold.",
+      "A full Pokédex of all 1025, a team builder that reads your coverage, and starter field guides.",
     accent: "var(--gold-light)",
     icon: CircleDot,
-    highlights: ["Starter field guides", "Team building", "Type matchups"],
+    highlights: ["Full Pokédex", "Team builder with coverage", "Starter field guides"],
   },
   {
     slug: "ufc",

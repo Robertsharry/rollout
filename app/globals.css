@@ -195,6 +195,11 @@
     border: 1px solid color-mix(in oklch, var(--brass) 30%, transparent);
   }
 
+  /* Crisp pixel sprites (the Pokédex registry) */
+  .pixelated {
+    image-rendering: pixelated;
+  }
+
   /* Gas-lamp halo (sparingly, on hover/CTAs) */
   .text-glow {
     text-shadow: 0 0 26px color-mix(in oklch, currentColor 50%, transparent);
