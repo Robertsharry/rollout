@@ -8,14 +8,14 @@ The squad's gaming house on the river — a community site for **Pokémon, UFC, 
 
 | Deck | Route | Status |
 | --- | --- | --- |
-| Grand Foyer (home) | `/` | ✅ live |
+| Grand Foyer (home) + porter's tour for new visitors | `/` | ✅ live |
 | Specimen Cabinet — all 9 gens, 3 full Kanto guides | `/pokemon` | ✅ live |
 | Sporting Club — Freedom 250 card + UFC 6 info | `/ufc` | ✅ live, hand updated weekly |
 | Munitions Deck — loadouts per front | `/helldivers` | ✅ live |
 | Cargo Hold — region manifests | `/arc-raiders` | ✅ live |
 | Showboat Theater — curtained video stage | `/videos` | ✅ live |
 | Penny Arcade — three original cabinets | `/arcade` | ✅ live |
-| Engine Room — interactive code lessons | `/learn` | ✅ live (13 stations + station log + Engineer's Papers) |
+| Engine Room — interactive code lessons | `/learn` | ✅ live (17 stations + station log + Engineer's Papers) |
 | Patrons' Ledger — Stripe donations | `/donate` | ✅ live (test mode) |
 | Saloon — five tables, threads, @mentions | `/forums` | ✅ live |
 | Library — community guides + Manuscript Desk | `/guides` | ✅ live (house reviewed) |
@@ -82,7 +82,7 @@ auth.ts           Auth.js v5 (Discord)
 
 - ✅ Foundation, riverboat design system, SEO
 - ✅ Pokémon cabinet (9 gens) + 3 Kanto guides · UFC live card · Helldivers · Arc Raiders
-- ✅ Theater · Arcade · Engine Room (13 stations: HTML, CSS, JS, free build)
+- ✅ Theater · Arcade · Engine Room (17 stations: HTML, CSS incl. flexbox/grid/responsive, JS incl. timers, free build)
 - ✅ Donations (Stripe, test mode)
 - ✅ **Phase 2:** Saloon forums, @mentions with notifications, House Board, private messages
 - ✅ Community guide submissions (Manuscript Desk → review → the Library) · Engine Room station log, Engineer's Papers, the Dry Dock · arcade bests chalk onto the House Board

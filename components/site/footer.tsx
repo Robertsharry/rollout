@@ -3,6 +3,7 @@ import { Link } from "next-view-transitions";
 import { DiscordButton } from "@/components/site/discord-button";
 import { Logo } from "@/components/site/logo";
 import { Container } from "@/components/site/section";
+import { TourTrigger } from "@/components/tour/porter-tour";
 import { GAMES, SECTIONS, SITE } from "@/lib/site";
 
 interface FooterColumn {
@@ -65,6 +66,9 @@ export function Footer() {
                     </Link>
                   </li>
                 ))}
+                <li>
+                  {col.title === "The Desk" ? <TourTrigger /> : null}
+                </li>
               </ul>
             </div>
           ))}

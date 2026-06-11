@@ -17,6 +17,7 @@ import { NoiseOverlay } from "@/components/effects/noise-overlay";
 import { Footer } from "@/components/site/footer";
 import { JsonLd } from "@/components/site/json-ld";
 import { Navbar } from "@/components/site/navbar";
+import { PorterTour } from "@/components/tour/porter-tour";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { buildMetadata, organizationJsonLd, websiteJsonLd } from "@/lib/seo";
@@ -102,6 +103,7 @@ export default async function RootLayout({
 
           <NoiseOverlay />
           <CustomCursor />
+          <PorterTour signedIn={Boolean(user)} />
           <Toaster position="bottom-right" />
         </body>
       </html>
