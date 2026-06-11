@@ -16,7 +16,7 @@ export const LANGUAGE_LABELS: Record<StationLanguage, { name: string; tagline: s
   },
   css: {
     name: "CSS — the paint and the motion",
-    tagline: "How the boat looks and moves. One palette repaints everything; two lines drive every curtain.",
+    tagline: "How the boat looks, lays out, and moves. One palette repaints everything; one rule rearranges a deck.",
   },
   js: {
     name: "JavaScript — the wiring under the decks",
@@ -84,8 +84,35 @@ export const STATIONS: Station[] = [
     teaches: "CSS & design tokens",
   },
   {
-    slug: "the-choreography",
+    slug: "the-cargo-plan",
     number: "07",
+    language: "css",
+    title: "The cargo plan",
+    summary:
+      "Flexbox is how a hold gets packed. Stack four crates, then change one word — row, center, between — and watch the whole cargo rearrange itself.",
+    teaches: "Flexbox layout",
+  },
+  {
+    slug: "the-berth-chart",
+    number: "08",
+    language: "css",
+    title: "The berth chart",
+    summary:
+      "Grid is the berth chart of a page: columns drawn first, everything sleeps where the chart says. Redraw the specimen cabinet with a slider and give one specimen a double berth.",
+    teaches: "CSS grid",
+  },
+  {
+    slug: "the-three-rivers",
+    number: "09",
+    language: "css",
+    title: "The three rivers",
+    summary:
+      "One deck, three boats: skiff, packet, steamer. Drag the river wider and narrower and watch media queries redraw the same cards for every size of screen.",
+    teaches: "Responsive design",
+  },
+  {
+    slug: "the-choreography",
+    number: "10",
     language: "css",
     title: "The choreography",
     summary:
@@ -94,7 +121,7 @@ export const STATIONS: Station[] = [
   },
   {
     slug: "the-wiring",
-    number: "08",
+    number: "11",
     language: "js",
     title: "The wiring",
     summary:
@@ -103,7 +130,7 @@ export const STATIONS: Station[] = [
   },
   {
     slug: "the-loop",
-    number: "09",
+    number: "12",
     language: "js",
     title: "The loop",
     summary:
@@ -112,7 +139,7 @@ export const STATIONS: Station[] = [
   },
   {
     slug: "the-conditions",
-    number: "10",
+    number: "13",
     language: "js",
     title: "The conditions",
     summary:
@@ -121,7 +148,7 @@ export const STATIONS: Station[] = [
   },
   {
     slug: "the-parts",
-    number: "11",
+    number: "14",
     language: "js",
     title: "The parts",
     summary:
@@ -130,7 +157,7 @@ export const STATIONS: Station[] = [
   },
   {
     slug: "the-signal",
-    number: "12",
+    number: "15",
     language: "js",
     title: "The signal",
     summary:
@@ -138,8 +165,17 @@ export const STATIONS: Station[] = [
     teaches: "Forms & server actions",
   },
   {
+    slug: "the-stage-manager",
+    number: "16",
+    language: "js",
+    title: "The stage manager",
+    summary:
+      "The theater's curtain swap is three timed cues: close, change the reel, reopen. Run the sequence and watch each line of the script light up the moment its timer fires.",
+    teaches: "Timers & sequencing",
+  },
+  {
     slug: "the-dry-dock",
-    number: "13",
+    number: "17",
     language: "capstone",
     title: "The dry dock",
     summary:

@@ -205,7 +205,7 @@ function PapersPanel() {
 
     ctx.fillStyle = "#B9C9B4";
     ctx.font = "30px 'Source Serif 4', Georgia, serif";
-    ctx.fillText("has opened every panel and logged all thirteen stations —", W / 2, 690);
+    ctx.fillText(`has opened every panel and logged all ${STATIONS.length} stations —`, W / 2, 690);
     ctx.fillText("the bones, the paint, and the wiring of a working boat.", W / 2, 734);
 
     ctx.strokeStyle = "#C9A14E";

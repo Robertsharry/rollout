@@ -1,36 +1,37 @@
 import { Link } from "next-view-transitions";
 
-import { StationDryDock } from "@/components/learn/station-drydock";
+import { StationCargo } from "@/components/learn/station-cargo";
 import { StationLogButton } from "@/components/learn/progress";
 import { JsonLd } from "@/components/site/json-ld";
 import { Container, Section } from "@/components/site/section";
-import { getStation } from "@/lib/learn";
+import { getStation, stationAfter } from "@/lib/learn";
 import { breadcrumbJsonLd, buildMetadata } from "@/lib/seo";
 
-const STATION = getStation("the-dry-dock");
+const STATION = getStation("the-cargo-plan");
 
 export const metadata = buildMetadata({
-  title: `Station ${STATION.number}: The Dry Dock — Free Build with Live Preview`,
+  title: `Station ${STATION.number}: The Cargo Plan — Flexbox by Packing a Hold`,
   description:
-    "The Engine Room capstone: write your own HTML and CSS and watch it render live. Start from a blank slip or take a house challenge.",
-  path: "/learn/the-dry-dock",
+    "Learn flexbox by packing a riverboat hold: four crates, four words of CSS, every arrangement on one screen with the code lighting up as you work.",
+  path: "/learn/the-cargo-plan",
 });
 
 const RECAP = [
-  "Everything renders from the same two materials you logged: structure first, paint second.",
-  "When a build misbehaves, read it like the stations taught you — find the box, then find the bucket it drinks from.",
-  "The challenges are starting points, not tests. Break them, rebuild them, make them yours.",
-  "When something you build here makes you grin, you are a person who builds websites now. The house said so.",
+  "display: flex turns a box into a foreman — its children stop stacking and start packing.",
+  "flex-direction picks the run, justify-content packs along it, align-items settles across it.",
+  "gap is the honest way to put air between things — no margin arithmetic.",
+  "Every card row and button cluster on this boat is one of these holds.",
 ];
 
-export default function TheDryDockPage() {
+export default function StationPage() {
+  const next = stationAfter("the-cargo-plan");
   return (
     <>
       <JsonLd
         data={breadcrumbJsonLd([
           { name: "Home", path: "/" },
           { name: "Engine Room", path: "/learn" },
-          { name: "The dry dock", path: "/learn/the-dry-dock" },
+          { name: "The cargo plan", path: "/learn/the-cargo-plan" },
         ])}
       />
 
@@ -48,27 +49,23 @@ export default function TheDryDockPage() {
               Station {STATION.number} · {STATION.teaches}
             </p>
             <h1 className="mt-2 font-display text-4xl font-bold tracking-tight sm:text-5xl">
-              The dry dock
+              The cargo plan
             </h1>
             <p className="mt-4 leading-relaxed text-sage">
-              Sixteen stations of guided machinery, and now the rails come off.
-              This is a working slip: HTML on one side, CSS under it, and your
-              build rendered live on the right. Nothing here is a trick or a
-              toy — it is the same two materials this whole boat is made of.
+              Before flexbox, lining boxes up on a page was carpentry — measured, fussy, and wrong the moment anything changed size. Flexbox replaced the carpentry with a foreman: you tell the hold which way it runs and how to pack, and every crate finds its place on its own.
             </p>
             <p className="mt-3 leading-relaxed text-sage">
-              Start from the blank slip, or take a house challenge and bend it
-              until it is yours.
+              Below is a working hold and the four words that run it. Change a word, watch the cargo move. Hover any control and the line of CSS it owns lights up — and hovering the code lights the control right back.
             </p>
           </header>
 
           <div className="mt-10">
-            <StationDryDock />
+            <StationCargo />
           </div>
 
           <div className="glass mt-10 rounded-lg p-6">
             <h2 className="font-mono text-xs tracking-[0.18em] text-gold-light uppercase">
-              What the dry dock teaches
+              What you just learned
             </h2>
             <ul className="mt-3 space-y-2 text-sm leading-relaxed text-foreground/90">
               {RECAP.map((item) => (
@@ -80,7 +77,18 @@ export default function TheDryDockPage() {
             </ul>
           </div>
 
-          <StationLogButton slug="the-dry-dock" />
+          <StationLogButton slug="the-cargo-plan" />
+
+          {next ? (
+            <div className="mt-8 text-right">
+              <Link
+                href={`/learn/${next.slug}`}
+                className="text-sm font-medium text-brass transition-colors hover:text-gold-light"
+              >
+                Next — Station {next.number}: {next.title} <span aria-hidden>☞</span>
+              </Link>
+            </div>
+          ) : null}
         </Container>
       </Section>
     </>

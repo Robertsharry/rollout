@@ -15,12 +15,16 @@ import { breadcrumbJsonLd, buildMetadata } from "@/lib/seo";
 export const metadata = buildMetadata({
   title: "The Engine Room — Learn to Code, Visually",
   description:
-    "Interactive coding lessons that open the panels of this very website. A complete HTML curriculum, two CSS deep dives, and five JavaScript stations — all taught by taking real parts of this site apart in your hands.",
+    "Interactive coding lessons that open the panels of this very website. Seventeen stations — full HTML, CSS from variables to flexbox, grid, and responsive design, six JavaScript stations, and a free build capstone — all taught by taking real parts of this site apart in your hands.",
   path: "/learn",
   keywords: [
     "learn html visually",
     "learn css interactive",
     "learn javascript visually",
+    "flexbox tutorial interactive",
+    "css grid tutorial interactive",
+    "responsive design tutorial",
+    "settimeout tutorial",
     "html attributes tutorial",
     "semantic html tutorial",
     "html forms tutorial",
@@ -54,7 +58,7 @@ export default function LearnPage() {
             align="center"
             kicker="Below decks · The Engine Room"
             title="Learn the machinery of this very boat."
-            description="No toy examples. Every station opens a real panel of this website — the theater, the cards, the curtain, the donation desk — and shows you the code that makes it run. Thirteen stations across HTML, CSS, and JavaScript, ending in a free build, made for people who learn with their eyes."
+            description="No toy examples. Every station opens a real panel of this website — the theater, the cards, the curtain, the donation desk — and shows you the code that makes it run. Seventeen stations across HTML, CSS, and JavaScript, ending in a free build, made for people who learn with their eyes."
           />
           <EngineProgress />
         </Container>
