@@ -1,6 +1,7 @@
 import { Link } from "next-view-transitions";
 
 import { StationForms } from "@/components/learn/station-forms";
+import { StationLogButton } from "@/components/learn/progress";
 import { JsonLd } from "@/components/site/json-ld";
 import { Container, Section } from "@/components/site/section";
 import { getStation, stationAfter } from "@/lib/learn";
@@ -98,6 +99,8 @@ export default function TheFormsPage() {
               </Link>
             </div>
           ) : null}
+          <StationLogButton slug="the-forms" />
+
         </Container>
       </Section>
     </>

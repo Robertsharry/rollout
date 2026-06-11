@@ -1,4 +1,4 @@
-export type StationLanguage = "html" | "css" | "js";
+export type StationLanguage = "html" | "css" | "js" | "capstone";
 
 export interface Station {
   slug: string;
@@ -21,6 +21,10 @@ export const LANGUAGE_LABELS: Record<StationLanguage, { name: string; tagline: s
   js: {
     name: "JavaScript — the wiring under the decks",
     tagline: "How the boat answers back. Click a button, edit some state, watch the boat respond.",
+  },
+  capstone: {
+    name: "The Dry Dock — build your own",
+    tagline: "No rails, no recipe. Real HTML and CSS in your hands, rendered live, with house challenges if you want a push.",
   },
 };
 
@@ -133,6 +137,15 @@ export const STATIONS: Station[] = [
       "What happens between clicking submit and the server saying thanks. Send a request through the wires of a miniature donate form and watch every leg of the round trip.",
     teaches: "Forms & server actions",
   },
+  {
+    slug: "the-dry-dock",
+    number: "13",
+    language: "capstone",
+    title: "The dry dock",
+    summary:
+      "Everything you logged, with the training wheels off. Write your own HTML and CSS and watch it render live — blank slip, or take a house challenge.",
+    teaches: "Free build",
+  },
 ];
 
 export function stationAfter(slug: string): Station | null {
@@ -151,5 +164,6 @@ export function stationsByLanguage(): Record<StationLanguage, Station[]> {
     html: STATIONS.filter((s) => s.language === "html"),
     css: STATIONS.filter((s) => s.language === "css"),
     js: STATIONS.filter((s) => s.language === "js"),
+    capstone: STATIONS.filter((s) => s.language === "capstone"),
   };
 }

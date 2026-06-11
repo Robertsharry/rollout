@@ -1,6 +1,7 @@
 import { Link } from "next-view-transitions";
 
 import { StationChoreo } from "@/components/learn/station-choreo";
+import { StationLogButton } from "@/components/learn/progress";
 import { JsonLd } from "@/components/site/json-ld";
 import { Container, Section } from "@/components/site/section";
 import { getStation, stationAfter } from "@/lib/learn";
@@ -91,6 +92,8 @@ export default function TheChoreographyPage() {
               </Link>
             </div>
           ) : null}
+          <StationLogButton slug="the-choreography" />
+
         </Container>
       </Section>
     </>

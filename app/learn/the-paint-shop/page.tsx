@@ -1,6 +1,7 @@
 import { Link } from "next-view-transitions";
 
 import { StationPaint } from "@/components/learn/station-paint";
+import { StationLogButton } from "@/components/learn/progress";
 import { JsonLd } from "@/components/site/json-ld";
 import { Container, Section } from "@/components/site/section";
 import { getStation, stationAfter } from "@/lib/learn";
@@ -91,6 +92,8 @@ export default function ThePaintShopPage() {
               </Link>
             </div>
           ) : null}
+          <StationLogButton slug="the-paint-shop" />
+
         </Container>
       </Section>
     </>

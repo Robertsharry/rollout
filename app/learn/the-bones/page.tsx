@@ -1,6 +1,7 @@
 import { Link } from "next-view-transitions";
 
 import { StationBones } from "@/components/learn/station-bones";
+import { StationLogButton } from "@/components/learn/progress";
 import { JsonLd } from "@/components/site/json-ld";
 import { Container, Section } from "@/components/site/section";
 import { getStation, stationAfter } from "@/lib/learn";
@@ -92,6 +93,8 @@ export default function TheBonesPage() {
               </Link>
             </div>
           ) : null}
+          <StationLogButton slug="the-bones" />
+
         </Container>
       </Section>
     </>

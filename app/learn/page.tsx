@@ -1,5 +1,6 @@
 import { Link } from "next-view-transitions";
 
+import { EngineProgress } from "@/components/learn/progress";
 import { JsonLd } from "@/components/site/json-ld";
 import { Container, Section } from "@/components/site/section";
 import { SectionHeading } from "@/components/site/section-heading";
@@ -34,7 +35,7 @@ export const metadata = buildMetadata({
   ],
 });
 
-const ORDER: StationLanguage[] = ["html", "css", "js"];
+const ORDER: StationLanguage[] = ["html", "css", "js", "capstone"];
 
 export default function LearnPage() {
   const groups = stationsByLanguage();
@@ -53,8 +54,9 @@ export default function LearnPage() {
             align="center"
             kicker="Below decks · The Engine Room"
             title="Learn the machinery of this very boat."
-            description="No toy examples. Every station opens a real panel of this website — the theater, the cards, the curtain, the donation desk — and shows you the code that makes it run. Twelve stations across HTML, CSS, and JavaScript, built for people who learn with their eyes."
+            description="No toy examples. Every station opens a real panel of this website — the theater, the cards, the curtain, the donation desk — and shows you the code that makes it run. Thirteen stations across HTML, CSS, and JavaScript, ending in a free build, made for people who learn with their eyes."
           />
+          <EngineProgress />
         </Container>
       </Section>
 

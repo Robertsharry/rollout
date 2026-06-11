@@ -1,6 +1,7 @@
 import { Link } from "next-view-transitions";
 
 import { StationLabels } from "@/components/learn/station-labels";
+import { StationLogButton } from "@/components/learn/progress";
 import { JsonLd } from "@/components/site/json-ld";
 import { Container, Section } from "@/components/site/section";
 import { getStation, stationAfter } from "@/lib/learn";
@@ -98,6 +99,8 @@ export default function TheLabelsPage() {
               </Link>
             </div>
           ) : null}
+          <StationLogButton slug="the-labels" />
+
         </Container>
       </Section>
     </>

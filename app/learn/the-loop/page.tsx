@@ -1,6 +1,7 @@
 import { Link } from "next-view-transitions";
 
 import { StationLoop } from "@/components/learn/station-loop";
+import { StationLogButton } from "@/components/learn/progress";
 import { JsonLd } from "@/components/site/json-ld";
 import { Container, Section } from "@/components/site/section";
 import { getStation, stationAfter } from "@/lib/learn";
@@ -98,6 +99,8 @@ export default function TheLoopPage() {
               </Link>
             </div>
           ) : null}
+          <StationLogButton slug="the-loop" />
+
         </Container>
       </Section>
     </>

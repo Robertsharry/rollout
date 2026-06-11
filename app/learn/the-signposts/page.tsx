@@ -1,6 +1,7 @@
 import { Link } from "next-view-transitions";
 
 import { StationSignposts } from "@/components/learn/station-signposts";
+import { StationLogButton } from "@/components/learn/progress";
 import { JsonLd } from "@/components/site/json-ld";
 import { Container, Section } from "@/components/site/section";
 import { getStation, stationAfter } from "@/lib/learn";
@@ -100,6 +101,8 @@ export default function TheSignpostsPage() {
               </Link>
             </div>
           ) : null}
+          <StationLogButton slug="the-signposts" />
+
         </Container>
       </Section>
     </>

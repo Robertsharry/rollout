@@ -1,6 +1,7 @@
 import { Link } from "next-view-transitions";
 
 import { StationConditions } from "@/components/learn/station-conditions";
+import { StationLogButton } from "@/components/learn/progress";
 import { JsonLd } from "@/components/site/json-ld";
 import { Container, Section } from "@/components/site/section";
 import { getStation, stationAfter } from "@/lib/learn";
@@ -98,6 +99,8 @@ export default function TheConditionsPage() {
               </Link>
             </div>
           ) : null}
+          <StationLogButton slug="the-conditions" />
+
         </Container>
       </Section>
     </>

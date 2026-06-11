@@ -1,6 +1,7 @@
 import { Link } from "next-view-transitions";
 
 import { StationSignal } from "@/components/learn/station-signal";
+import { StationLogButton } from "@/components/learn/progress";
 import { JsonLd } from "@/components/site/json-ld";
 import { Container, Section } from "@/components/site/section";
 import { getStation } from "@/lib/learn";
@@ -99,6 +100,8 @@ export default function TheSignalPage() {
               Curriculum complete · all twelve stations open
             </p>
           </div>
+          <StationLogButton slug="the-signal" />
+
         </Container>
       </Section>
     </>

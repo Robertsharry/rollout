@@ -1,6 +1,7 @@
 import { Link } from "next-view-transitions";
 
 import { StationCredits } from "@/components/learn/station-credits";
+import { StationLogButton } from "@/components/learn/progress";
 import { JsonLd } from "@/components/site/json-ld";
 import { Container, Section } from "@/components/site/section";
 import { getStation, stationAfter } from "@/lib/learn";
@@ -99,6 +100,8 @@ export default function TheCreditsPage() {
               </Link>
             </div>
           ) : null}
+          <StationLogButton slug="the-credits" />
+
         </Container>
       </Section>
     </>

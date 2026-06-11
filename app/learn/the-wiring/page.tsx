@@ -1,6 +1,7 @@
 import { Link } from "next-view-transitions";
 
 import { StationWiring } from "@/components/learn/station-wiring";
+import { StationLogButton } from "@/components/learn/progress";
 import { JsonLd } from "@/components/site/json-ld";
 import { Container, Section } from "@/components/site/section";
 import { getStation, stationAfter } from "@/lib/learn";
@@ -113,6 +114,8 @@ export default function TheWiringPage() {
               </p>
             </div>
           )}
+          <StationLogButton slug="the-wiring" />
+
         </Container>
       </Section>
     </>
