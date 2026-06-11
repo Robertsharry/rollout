@@ -103,3 +103,22 @@ const counts = await sql`
     (select count(*) from profile where handle is not null) as handled
 `;
 console.log("seed complete:", JSON.stringify(counts[0]));
+
+// the owner runs the review desk
+await sql`update profile set role = 'admin' where handle = 'iamrob' and role = 'member'`;
+console.log("review desk keys handed to @iamrob");
+
+// one volume on the shelf so the library is not bare
+const GUIDE_TITLE = "The two minute extraction checklist";
+const guideDupe = await sql`select 1 from submission where title = ${GUIDE_TITLE}`;
+if (guideDupe.length === 0) {
+  await sql`
+    insert into submission (id, "authorId", game, title, body, status, "reviewedAt")
+    values (
+      ${crypto.randomUUID()}, ${HOUSE_ID}, 'arc-raiders', ${GUIDE_TITLE},
+      ${'Before you call the elevator, run the list. It takes two minutes and it has saved more kits than any gunfight ever will.\n\nOne: count your noise. Every fight you took in the last ten minutes told somebody where you are. If you fought near the exit, leave from a different one.\n\nTwo: check the sky. Wasps patrol in loops — watch one full circuit before you cross open ground. If you cannot see the loop, you are the loop.\n\nThree: weigh the greed. The last container is how raiders die. If your bag is worth more than your life insurance, it already is.\n\nFour: walk the exit before you need it. Thirty seconds spent learning the cover around the elevator pays out every single raid.\n\nFive: leave together or do not leave. Split extractions feed the machines twice.'},
+      'published', now()
+    )
+  `;
+  console.log("shelved: " + GUIDE_TITLE);
+}

@@ -176,6 +176,7 @@ export async function createNotifications(
     actorId: string;
     kind: NotificationKind;
     threadId?: string;
+    submissionId?: string;
     snippet: string;
   }[],
 ) {
@@ -191,6 +192,7 @@ export async function listNotifications(userId: string, limit = 30) {
       kind: notifications.kind,
       snippet: notifications.snippet,
       threadId: notifications.threadId,
+      submissionId: notifications.submissionId,
       board: threads.board,
       readAt: notifications.readAt,
       createdAt: notifications.createdAt,

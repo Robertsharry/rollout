@@ -183,6 +183,7 @@ export const NAV: NavItem[] = [
     })),
   },
   { label: "Saloon", href: "/forums", icon: MessagesSquare },
+  { label: "Library", href: "/guides", icon: BookOpen },
   { label: "House Board", href: "/leaderboard", icon: Trophy },
   { label: "Theater", href: "/videos", icon: Clapperboard },
   { label: "Arcade", href: "/arcade", icon: Gamepad2 },

@@ -1,5 +1,5 @@
 import { Link } from "next-view-transitions";
-import { AtSign, Bell, MessageSquare, Reply } from "lucide-react";
+import { AtSign, Bell, BookOpen, MessageSquare, Reply } from "lucide-react";
 
 import { startConversation } from "@/app/inbox/actions";
 import { AuthorChip } from "@/components/community/author-chip";
@@ -128,9 +128,13 @@ export default async function InboxPage() {
                   <li key={n.id}>
                     <Link
                       href={
-                        n.threadId && n.board
-                          ? `/forums/${n.board}/${n.threadId}`
-                          : "/forums"
+                        n.kind === "guide"
+                          ? n.submissionId
+                            ? `/guides/${n.submissionId}`
+                            : "/guides/submit"
+                          : n.threadId && n.board
+                            ? `/forums/${n.board}/${n.threadId}`
+                            : "/forums"
                       }
                       className={cn(
                         "glass block rounded-lg p-4 transition-all hover:-translate-y-0.5 hover:border-brass/60",
@@ -140,6 +144,8 @@ export default async function InboxPage() {
                       <div className="flex items-center gap-2 text-sm">
                         {n.kind === "mention" ? (
                           <AtSign className="size-3.5 shrink-0 text-brass" />
+                        ) : n.kind === "guide" ? (
+                          <BookOpen className="size-3.5 shrink-0 text-brass" />
                         ) : (
                           <Reply className="size-3.5 shrink-0 text-brass" />
                         )}
@@ -148,7 +154,9 @@ export default async function InboxPage() {
                       <p className="mt-1.5 text-sm text-sage">
                         {n.kind === "mention"
                           ? "mentioned you in "
-                          : "replied to "}
+                          : n.kind === "guide"
+                            ? "reviewed your manuscript "
+                            : "replied to "}
                         <span className="text-foreground/90">“{n.snippet}”</span>
                         <span className="ml-2 font-mono text-[11px] text-muted-foreground">
                           {formatRelative(n.createdAt)}

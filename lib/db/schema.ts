@@ -118,9 +118,35 @@ export const replies = pgTable(
   (t) => [index("reply_thread_idx").on(t.threadId, t.createdAt)],
 );
 
+/* ------------------------------------------------------- the manuscript desk */
+
+export type SubmissionStatus = "pending" | "published" | "declined";
+
+export const submissions = pgTable(
+  "submission",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    authorId: text("authorId")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    /** Game slug from lib/site GAMES, or "general". */
+    game: text("game").notNull(),
+    title: text("title").notNull(),
+    body: text("body").notNull(),
+    status: text("status").$type<SubmissionStatus>().default("pending").notNull(),
+    /** A short note from the house when a manuscript is returned. */
+    reviewNote: text("reviewNote"),
+    createdAt: timestamp("createdAt", { mode: "date" }).defaultNow().notNull(),
+    reviewedAt: timestamp("reviewedAt", { mode: "date" }),
+  },
+  (t) => [index("submission_status_idx").on(t.status, t.createdAt)],
+);
+
 /* ------------------------------------------------------------ notifications */
 
-export type NotificationKind = "mention" | "reply";
+export type NotificationKind = "mention" | "reply" | "guide";
 
 export const notifications = pgTable(
   "notification",
@@ -136,6 +162,9 @@ export const notifications = pgTable(
       .references(() => users.id, { onDelete: "cascade" }),
     kind: text("kind").$type<NotificationKind>().notNull(),
     threadId: text("threadId").references(() => threads.id, {
+      onDelete: "cascade",
+    }),
+    submissionId: text("submissionId").references(() => submissions.id, {
       onDelete: "cascade",
     }),
     snippet: text("snippet").notNull(),

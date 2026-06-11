@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 
 import { getPokemonGuides } from "@/lib/guides";
 import { STATIONS } from "@/lib/learn";
+import { listPublishedGuides } from "@/lib/manuscripts";
 import { GAME_SLUGS, SECTIONS } from "@/lib/site";
 import { absoluteUrl } from "@/lib/utils";
 
@@ -11,6 +12,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
   const paths = [
     "/",
+    "/guides",
     ...GAME_SLUGS.map((slug) => `/${slug}`),
     ...SECTIONS.map((section) => `/${section.slug}`),
     ...ARCADE_CABINETS.map((slug) => `/arcade/${slug}`),
@@ -32,5 +34,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }));
 
-  return [...base, ...guideEntries];
+  const community = await listPublishedGuides().catch(() => []);
+  const communityEntries: MetadataRoute.Sitemap = community.map((guide) => ({
+    url: absoluteUrl(`/guides/${guide.id}`),
+    lastModified: guide.reviewedAt ?? now,
+    changeFrequency: "monthly",
+    priority: 0.7,
+  }));
+
+  return [...base, ...guideEntries, ...communityEntries];
 }
