@@ -35,6 +35,55 @@ export function fitCanvas(
 export const clamp = (v: number, lo: number, hi: number) =>
   Math.max(lo, Math.min(hi, v));
 
+/**
+ * Advance a grid-locked actor by `step` pixels, pausing at EVERY cell center
+ * crossed so the caller can turn, stop, or keep going. Distance-based, so a
+ * slow frame can never skip a turn window or carry an actor through a wall —
+ * the failure mode of "am I within N px of center" checks.
+ *
+ * `onCenter` runs with the actor snapped exactly on a center; it returns the
+ * direction to continue in (may be the same), or null to stop there.
+ * `normalize` (optional) runs each iteration for things like tunnel wrap.
+ */
+export function walkGrid(
+  pos: { x: number; y: number },
+  dir: { x: number; y: number },
+  step: number,
+  cell: number,
+  onCenter: (c: number, r: number) => { x: number; y: number } | null,
+  normalize?: (pos: { x: number; y: number }) => void,
+): { x: number; y: number } {
+  let guard = 12;
+  while (step > 1e-6 && (dir.x !== 0 || dir.y !== 0) && guard-- > 0) {
+    normalize?.(pos);
+    const cx = Math.floor(pos.x / cell);
+    const cy = Math.floor(pos.y / cell);
+    let tx = (cx + 0.5) * cell;
+    let ty = (cy + 0.5) * cell;
+    let d = (tx - pos.x) * dir.x + (ty - pos.y) * dir.y;
+    if (d < 1e-6) {
+      tx += dir.x * cell;
+      ty += dir.y * cell;
+      d += cell;
+    }
+    // epsilon-matched with the d test above: a frame that ends ON a center
+    // must take the snap branch and decide there, or the next frame would
+    // treat the center as already cleared and sail past it
+    if (step < d - 1e-6) {
+      pos.x += dir.x * step;
+      pos.y += dir.y * step;
+      return dir;
+    }
+    pos.x = tx;
+    pos.y = ty;
+    step -= d;
+    const next = onCenter(Math.floor(pos.x / cell), Math.floor(pos.y / cell));
+    if (!next) return { x: 0, y: 0 };
+    dir = next;
+  }
+  return dir;
+}
+
 export const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
 export function prefersReducedMotion() {

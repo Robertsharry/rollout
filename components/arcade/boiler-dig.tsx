@@ -9,6 +9,7 @@ import {
   loadHighScore,
   ParticlePool,
   saveHighScore,
+  walkGrid,
   type GameState,
   type HudState,
   useCoarsePointer,
@@ -41,13 +42,18 @@ interface Critter {
   x: number;
   y: number;
   dir: Dir;
+  /** Seeping through solid soil, Dig Dug style. Earned, not the default. */
   ghost: boolean;
+  /** Seconds of being cut off from the stoker before it starts seeping. */
+  patience: number;
   repath: number;
   path: { c: number; r: number }[];
   // imp fire
   charge: number;
   flame: number;
   flameDir: 1 | -1;
+  /** Pixels of flame, clipped by solid soil when it ignites. */
+  flameReach: number;
   dead: boolean;
 }
 
@@ -120,8 +126,11 @@ class BoilerDigGame {
       this.want = STOP;
   };
 
+  grace = 0;
+
   constructor(canvas: HTMLCanvasElement, hooks: Hooks) {
     this.ctx = fitCanvas(canvas, W, H);
+    (canvas as HTMLCanvasElement & { __game?: unknown }).__game = this;
     this.hooks = hooks;
     this.high = loadHighScore(SLUG);
     this.buildBoard();
@@ -183,9 +192,9 @@ class BoilerDigGame {
     ];
     spots.forEach(([c, r]) => this.nuggets.add(key(c, r)));
 
-    // loose cargo
+    // loose cargo — every crate spawns with solid soil beneath it
     this.crates = [
-      [4, 2],
+      [5, 2],
       [11, 4],
       [7, 7],
       [2, 8],
@@ -206,6 +215,7 @@ class BoilerDigGame {
     this.facing = RIGHT;
     this.lance = 0;
     this.lanceCooldown = 0;
+    this.grace = fresh ? 0 : 1.6;
 
     if (fresh) {
       const mites = Math.min(3 + Math.floor(this.round / 2), 6);
@@ -220,7 +230,7 @@ class BoilerDigGame {
       this.critters = [];
       for (let i = 0; i < mites; i++) {
         const s = spawns[i % spawns.length];
-        this.critters.push(this.makeCritter("mite", s.c, s.r));
+        this.critters.push(this.makeCritter("mite", s.c, s.r, i));
       }
       const imps = Math.min(1 + Math.floor((this.round - 1) / 2), 3);
       const impSpawns = [
@@ -230,23 +240,36 @@ class BoilerDigGame {
       ];
       for (let i = 0; i < imps; i++) {
         const s = impSpawns[i % impSpawns.length];
-        this.critters.push(this.makeCritter("imp", s.c, s.r));
+        this.critters.push(this.makeCritter("imp", s.c, s.r, mites + i));
       }
+    } else {
+      // a fresh stoker gets a clean board: no flames mid air, no charges held
+      this.critters.forEach((m) => {
+        m.charge = 0;
+        m.flame = 0;
+      });
     }
   }
 
-  makeCritter(kind: CritterKind, c: number, r: number): Critter {
+  patienceFor(slot: number) {
+    const base = 5.5 + slot * 2 - (this.round - 1) * 0.4;
+    return Math.max(3, base) + Math.random() * 1.5;
+  }
+
+  makeCritter(kind: CritterKind, c: number, r: number, slot: number): Critter {
     return {
       kind,
       x: (c + 0.5) * CELL,
       y: (r + 0.5) * CELL,
       dir: LEFT,
       ghost: false,
+      patience: this.patienceFor(slot),
       repath: Math.random() * 0.4,
       path: [],
       charge: 0,
       flame: 0,
       flameDir: 1,
+      flameReach: 0,
       dead: false,
     };
   }
@@ -306,6 +329,8 @@ class BoilerDigGame {
       return;
     }
 
+    if (this.grace > 0) this.grace -= dt;
+
     this.movePlayer(dt);
     this.critters.forEach((m) => this.moveCritter(m, dt));
     this.updateCrates(dt);
@@ -326,79 +351,107 @@ class BoilerDigGame {
     }
   }
 
-  movePlayer(dt: number) {
-    const cx = Math.floor(this.px / CELL);
-    const cy = Math.floor(this.py / CELL);
-    const inSoil = this.soil.has(key(cx, cy));
-    const speed = (inSoil ? 2.6 : 3.7) * CELL * Math.min(1 + this.round * 0.03, 1.25);
-
-    const centerX = (cx + 0.5) * CELL;
-    const centerY = (cy + 0.5) * CELL;
-    const atCenter =
-      Math.abs(this.px - centerX) < 2.4 && Math.abs(this.py - centerY) < 2.4;
-
-    const blockedByCrate = (c: number, r: number) =>
-      this.crates.some((b) => !b.gone && b.state !== "fall" && b.c === c && b.r === r);
-    const can = (d: Dir) => {
-      const nc = cx + d.x;
-      const nr = cy + d.y;
-      if (nc < 0 || nc >= COLS || nr < 0 || nr >= ROWS) return false;
-      return !blockedByCrate(nc, nr);
-    };
-
-    if (atCenter) {
-      if ((this.want.x || this.want.y) && can(this.want)) {
-        this.pdir = this.want;
-        this.facing = this.want;
-        this.px = centerX;
-        this.py = centerY;
-      } else if (!this.want.x && !this.want.y) {
-        this.pdir = STOP;
-      } else if (!can(this.pdir)) {
-        this.pdir = STOP;
-      }
-    } else if (
-      this.want.x === -this.pdir.x &&
-      this.want.y === -this.pdir.y &&
-      (this.want.x || this.want.y)
-    ) {
-      this.pdir = this.want;
-      this.facing = this.want;
-    }
-
-    this.px += this.pdir.x * speed * dt;
-    this.py += this.pdir.y * speed * dt;
-    this.px = Math.max(CELL / 2, Math.min(W - CELL / 2, this.px));
-    this.py = Math.max(CELL / 2, Math.min(H - CELL / 2, this.py));
-
-    const nc = Math.floor(this.px / CELL);
-    const nr = Math.floor(this.py / CELL);
-    if (this.soil.delete(key(nc, nr))) {
+  digAt(c: number, r: number) {
+    const k = key(c, r);
+    if (this.soil.delete(k)) {
       this.score += 5;
-      if (this.nuggets.delete(key(nc, nr))) {
+      if (this.nuggets.delete(k)) {
         this.score += 150;
-        this.particles.burst(this.px, this.py, "#E3C77E", 10, 110);
+        this.particles.burst((c + 0.5) * CELL, (r + 0.5) * CELL, "#E3C77E", 10, 110);
       }
       this.pushHud();
     }
   }
 
-  repath(m: Critter) {
-    // breadth first through dug cells toward the stoker
-    const start = { c: Math.floor(m.x / CELL), r: Math.floor(m.y / CELL) };
-    const goal = { c: Math.floor(this.px / CELL), r: Math.floor(this.py / CELL) };
-    const seen = new Set<string>([key(start.c, start.r)]);
-    const queue: { c: number; r: number; path: { c: number; r: number }[] }[] = [
-      { ...start, path: [] },
-    ];
-    let guard = 0;
-    while (queue.length && guard++ < 140) {
-      const cur = queue.shift()!;
-      if (cur.c === goal.c && cur.r === goal.r) {
-        m.path = cur.path;
-        m.ghost = false;
+  open(c: number, r: number) {
+    if (c < 0 || c >= COLS || r < 0 || r >= ROWS) return false;
+    return !this.crates.some(
+      (b) => !b.gone && b.state !== "fall" && b.c === c && b.r === r,
+    );
+  }
+
+  movePlayer(dt: number) {
+    const cx0 = Math.floor(this.px / CELL);
+    const cy0 = Math.floor(this.py / CELL);
+    const inSoil = this.soil.has(key(cx0, cy0));
+    const speed =
+      (inSoil ? 2.6 : 3.7) * CELL * Math.min(1 + this.round * 0.03, 1.25);
+
+    // reversing is always legal, anywhere in the shaft
+    if (
+      (this.want.x || this.want.y) &&
+      (this.pdir.x || this.pdir.y) &&
+      this.want.x === -this.pdir.x &&
+      this.want.y === -this.pdir.y
+    ) {
+      this.pdir = this.want;
+      this.facing = this.want;
+    }
+
+    // parked on a center: pull away as soon as a key is held
+    if (!this.pdir.x && !this.pdir.y) {
+      if (
+        (this.want.x || this.want.y) &&
+        this.open(cx0 + this.want.x, cy0 + this.want.y)
+      ) {
+        this.pdir = this.want;
+        this.facing = this.want;
+      } else {
         return;
       }
+    }
+
+    // cornering grace: a turn asked for just past a center still takes it
+    const past =
+      (this.px - (cx0 + 0.5) * CELL) * this.pdir.x +
+      (this.py - (cy0 + 0.5) * CELL) * this.pdir.y;
+    if (
+      (this.want.x || this.want.y) &&
+      this.want.x * this.pdir.x + this.want.y * this.pdir.y === 0 &&
+      past > 0 &&
+      past <= 5 &&
+      this.open(cx0 + this.want.x, cy0 + this.want.y)
+    ) {
+      this.px = (cx0 + 0.5) * CELL;
+      this.py = (cy0 + 0.5) * CELL;
+      this.pdir = this.want;
+      this.facing = this.want;
+    }
+
+    let cur = this.pdir;
+    const pos = { x: this.px, y: this.py };
+    const final = walkGrid(pos, cur, speed * dt, CELL, (c, r) => {
+      this.digAt(c, r);
+      const w = this.want;
+      if (!w.x && !w.y) return null; // key released — settle on this center
+      if (this.open(c + w.x, r + w.y)) {
+        cur = w;
+        this.facing = w;
+        return w;
+      }
+      if (this.open(c + cur.x, r + cur.y)) return cur;
+      return null;
+    });
+    this.px = pos.x;
+    this.py = pos.y;
+    this.pdir = final.x || final.y ? final : STOP;
+
+    this.digAt(Math.floor(this.px / CELL), Math.floor(this.py / CELL));
+  }
+
+  /** Breadth first through dug cells; null when the stoker is unreachable. */
+  findPath(c0: number, r0: number): { c: number; r: number }[] | null {
+    const goal = {
+      c: Math.floor(this.px / CELL),
+      r: Math.floor(this.py / CELL),
+    };
+    const seen = new Set<string>([key(c0, r0)]);
+    const queue: { c: number; r: number; path: { c: number; r: number }[] }[] =
+      [{ c: c0, r: r0, path: [] }];
+    let guard = 0;
+    while (queue.length && guard++ < 420) {
+      const cur = queue.shift()!;
+      if (cur.c === goal.c && cur.r === goal.r) return cur.path;
       for (const d of [UP, LEFT, DOWN, RIGHT]) {
         const nc = cur.c + d.x;
         const nr = cur.r + d.y;
@@ -408,12 +461,53 @@ class BoilerDigGame {
         queue.push({ c: nc, r: nr, path: [...cur.path, { c: nc, r: nr }] });
       }
     }
-    m.path = [];
-    m.ghost = true; // no tunnel route — seep through the soot
+    return null;
+  }
+
+  repath(m: Critter) {
+    const p = this.findPath(Math.floor(m.x / CELL), Math.floor(m.y / CELL));
+    if (p) {
+      m.path = p;
+      m.patience = Math.max(m.patience, 4 + Math.random() * 2);
+    } else {
+      m.path = [];
+    }
+  }
+
+  /** Pace the pocket back and forth until a route to the stoker opens. */
+  patrol(m: Critter, dt: number, speed: number) {
+    let cur = m.dir.x || m.dir.y ? m.dir : LEFT;
+    const pos = { x: m.x, y: m.y };
+    const final = walkGrid(pos, cur, speed * dt, CELL, (c, r) => {
+      if (this.dug(c + cur.x, r + cur.y)) return cur;
+      const rev = { x: -cur.x, y: -cur.y };
+      if (this.dug(c + rev.x, r + rev.y)) {
+        cur = rev;
+        return rev;
+      }
+      return null;
+    });
+    m.x = pos.x;
+    m.y = pos.y;
+    m.dir = final.x || final.y ? final : cur;
+  }
+
+  igniteFlame(m: Critter) {
+    m.flameDir = this.px < m.x ? -1 : 1;
+    const c0 = Math.floor(m.x / CELL);
+    const r0 = Math.floor(m.y / CELL);
+    let cells = 0;
+    for (let i = 1; i <= 3; i++) {
+      const cc = c0 + m.flameDir * i;
+      if (cc < 0 || cc >= COLS || !this.dug(cc, r0)) break;
+      cells = i;
+    }
+    m.flameReach = Math.max(cells, 0.35) * CELL;
+    m.flame = 0.38;
   }
 
   moveCritter(m: Critter, dt: number) {
-    if (m.kind === "imp") {
+    if (m.kind === "imp" && !m.ghost) {
       if (m.flame > 0) {
         m.flame -= dt;
         this.checkFlame(m);
@@ -421,66 +515,124 @@ class BoilerDigGame {
       }
       if (m.charge > 0) {
         m.charge -= dt;
-        if (m.charge <= 0) {
-          m.flame = 0.38;
-          m.flameDir = this.px < m.x ? -1 : 1;
-        }
+        if (m.charge <= 0) this.igniteFlame(m);
         return;
       }
       const sameRow = Math.abs(this.py - m.y) < CELL * 0.6;
       const dist = Math.abs(this.px - m.x) / CELL;
-      if (sameRow && dist < 3.4 && Math.random() < 0.012) {
+      if (sameRow && dist < 3.4 && dist > 0.7 && Math.random() < dt * 0.8) {
         m.charge = 0.55;
         return;
       }
     }
 
-    m.repath -= dt;
-    if (m.repath <= 0) {
-      m.repath = 0.45;
-      this.repath(m);
-    }
-
-    const speed =
-      (m.ghost ? 1.05 : m.kind === "imp" ? 2.2 : 2.7) *
-      CELL *
-      Math.min(1 + this.round * 0.05, 1.4);
+    const scale = Math.min(1 + this.round * 0.05, 1.4);
 
     if (m.ghost) {
+      const speed = 1.05 * CELL * scale;
       const dx = this.px - m.x;
       const dy = this.py - m.y;
       const len = Math.hypot(dx, dy) || 1;
       m.x += (dx / len) * speed * dt;
       m.y += (dy / len) * speed * dt;
-    } else if (m.path.length) {
-      const next = m.path[0];
-      const tx = (next.c + 0.5) * CELL;
-      const ty = (next.r + 0.5) * CELL;
-      const dx = tx - m.x;
-      const dy = ty - m.y;
-      const len = Math.hypot(dx, dy);
-      if (len < 2.5) m.path.shift();
-      else {
-        m.x += (dx / len) * speed * dt;
-        m.y += (dy / len) * speed * dt;
+
+      // solidify when it settles into a tunnel that actually reaches the stoker
+      const c = Math.floor(m.x / CELL);
+      const r = Math.floor(m.y / CELL);
+      const cx = (c + 0.5) * CELL;
+      const cy = (r + 0.5) * CELL;
+      if (
+        this.dug(c, r) &&
+        Math.abs(m.x - cx) < 5 &&
+        Math.abs(m.y - cy) < 5
+      ) {
+        const path = this.findPath(c, r);
+        if (path) {
+          m.ghost = false;
+          m.x = cx;
+          m.y = cy;
+          m.path = path;
+          m.patience = 6 + Math.random() * 3;
+          m.repath = 0.4;
+        }
+      }
+    } else {
+      m.repath -= dt;
+      if (m.repath <= 0) {
+        m.repath = 0.4;
+        this.repath(m);
+      }
+
+      const speed = (m.kind === "imp" ? 2.2 : 2.7) * CELL * scale;
+      if (m.path.length) {
+        let step = speed * dt;
+        let guard = 6;
+        while (step > 1e-6 && m.path.length && guard-- > 0) {
+          const n = m.path[0];
+          const tx = (n.c + 0.5) * CELL;
+          const ty = (n.r + 0.5) * CELL;
+          const dx = tx - m.x;
+          const dy = ty - m.y;
+          const len = Math.hypot(dx, dy);
+          if (len <= step) {
+            m.x = tx;
+            m.y = ty;
+            step -= len;
+            m.path.shift();
+          } else {
+            m.x += (dx / len) * step;
+            m.y += (dy / len) * step;
+            step = 0;
+          }
+        }
+      } else {
+        m.patience -= dt;
+        if (m.patience <= 0) m.ghost = true;
+        else this.patrol(m, dt, speed * 0.55);
       }
     }
 
-    if (Math.hypot(m.x - this.px, m.y - this.py) < CELL * 0.55) this.killPlayer();
+    if (Math.hypot(m.x - this.px, m.y - this.py) < CELL * 0.52) this.killPlayer();
   }
 
   checkFlame(m: Critter) {
-    const reach = 3 * CELL;
-    const y = m.y;
     const x0 = m.x;
-    const x1 = m.x + m.flameDir * reach;
+    const x1 = m.x + m.flameDir * m.flameReach;
     const inX =
       this.px > Math.min(x0, x1) - 8 && this.px < Math.max(x0, x1) + 8;
-    if (inX && Math.abs(this.py - y) < CELL * 0.5) this.killPlayer();
+    if (inX && Math.abs(this.py - m.y) < CELL * 0.5) this.killPlayer();
+  }
+
+  /** True when the straight run from the stoker to (tx, ty) is all dug out. */
+  steamClear(tx: number, ty: number) {
+    const steps = Math.max(
+      1,
+      Math.ceil(Math.hypot(tx - this.px, ty - this.py) / (CELL / 2)),
+    );
+    for (let i = 1; i <= steps; i++) {
+      const x = this.px + ((tx - this.px) * i) / steps;
+      const y = this.py + ((ty - this.py) * i) / steps;
+      if (!this.dug(Math.floor(x / CELL), Math.floor(y / CELL))) return false;
+    }
+    return true;
+  }
+
+  /** How far the lance reaches before solid soil swallows the steam. */
+  lanceReach() {
+    const full = 2.3 * CELL;
+    const steps = 8;
+    for (let i = 1; i <= steps; i++) {
+      const x = this.px + this.facing.x * (full * i) / steps;
+      const y = this.py + this.facing.y * (full * i) / steps;
+      if (!this.dug(Math.floor(x / CELL), Math.floor(y / CELL)))
+        return (full * (i - 1)) / steps;
+    }
+    return full;
   }
 
   lanceHits() {
-    const reach = 2.3 * CELL;
+    const reach = this.lanceReach();
+    if (reach <= 0) return;
     for (const m of this.critters) {
       if (m.dead) continue;
       const proj =
@@ -488,7 +640,7 @@ class BoilerDigGame {
       const t = Math.max(0, Math.min(1, proj / reach));
       const lx = this.px + this.facing.x * reach * t;
       const ly = this.py + this.facing.y * reach * t;
-      if (Math.hypot(m.x - lx, m.y - ly) < CELL * 0.5) {
+      if (Math.hypot(m.x - lx, m.y - ly) < CELL * 0.5 && this.steamClear(lx, ly)) {
         m.dead = true;
         const depth = Math.floor(m.y / CELL);
         const pts = (100 + depth * 25) * (m.kind === "imp" ? 1.5 : 1);
@@ -551,7 +703,7 @@ class BoilerDigGame {
           newRow >= ROWS ||
           this.soil.has(key(b.c, newRow)) ||
           this.crates.some(
-            (o) => !o.gone && o !== b && o.c === b.c && o.r === newRow && o.state === "rest",
+            (o) => !o.gone && o !== b && o.c === b.c && o.r === newRow && o.state !== "fall",
           );
         if (blockedBelow) {
           const landedRow = newRow - 1;
@@ -578,7 +730,7 @@ class BoilerDigGame {
   }
 
   killPlayer() {
-    if (this.deadTimer > 0) return;
+    if (this.deadTimer > 0 || this.grace > 0) return;
     this.lives--;
     this.deadTimer = 1.2;
     this.particles.burst(this.px, this.py, "#E3C77E", 26, 190, 0.8);
@@ -657,19 +809,23 @@ class BoilerDigGame {
   drawPlayer() {
     const { ctx } = this;
     if (this.deadTimer > 0 && Math.floor(this.deadTimer * 10) % 2 === 0) return;
+    if (this.grace > 0 && Math.floor(this.time * 9) % 2 === 0)
+      ctx.globalAlpha = 0.45;
 
-    // steam lance
+    // steam lance — swallowed where the soot is still solid
     if (this.lance > 0) {
-      const reach = 2.3 * CELL;
-      ctx.strokeStyle = "rgba(220,240,230,0.9)";
-      ctx.lineWidth = 5;
-      ctx.beginPath();
-      ctx.moveTo(this.px, this.py);
-      ctx.lineTo(this.px + this.facing.x * reach, this.py + this.facing.y * reach);
-      ctx.stroke();
-      ctx.strokeStyle = "rgba(160,220,200,0.5)";
-      ctx.lineWidth = 9;
-      ctx.stroke();
+      const reach = this.lanceReach();
+      if (reach > 2) {
+        ctx.strokeStyle = "rgba(220,240,230,0.9)";
+        ctx.lineWidth = 5;
+        ctx.beginPath();
+        ctx.moveTo(this.px, this.py);
+        ctx.lineTo(this.px + this.facing.x * reach, this.py + this.facing.y * reach);
+        ctx.stroke();
+        ctx.strokeStyle = "rgba(160,220,200,0.5)";
+        ctx.lineWidth = 9;
+        ctx.stroke();
+      }
     }
 
     ctx.fillStyle = "#2F5240";
@@ -682,6 +838,7 @@ class BoilerDigGame {
     const ex = this.facing.x * 2;
     ctx.fillRect(this.px - 2 + ex, this.py - 9, 1.8, 2.6);
     ctx.fillRect(this.px + 1 + ex, this.py - 9, 1.8, 2.6);
+    ctx.globalAlpha = 1;
   }
 
   drawCritters() {
@@ -714,8 +871,9 @@ class BoilerDigGame {
         ctx.fillRect(m.x + 2, m.y - 4, 3, 3);
         if (m.flame > 0) {
           const fx = m.x + m.flameDir * 10;
+          const segs = Math.max(1, Math.round(m.flameReach / CELL));
           ctx.fillStyle = "rgba(240,160,48,0.9)";
-          for (let i = 0; i < 3; i++) {
+          for (let i = 0; i < segs; i++) {
             const seg = fx + m.flameDir * i * CELL * 0.95;
             ctx.beginPath();
             ctx.moveTo(seg, m.y - 7 + i);
@@ -761,6 +919,52 @@ export function BoilerDig({ chalk }: { chalk?: ChalkProp }) {
     if (gameRef.current) gameRef.current.want = STOP;
   };
 
+  // touch steering on the screen itself: drag to dig, tap to vent steam
+  const stick = useRef<{
+    x: number;
+    y: number;
+    id: number;
+    moved: boolean;
+    t: number;
+  } | null>(null);
+  const onPointerDown = (e: React.PointerEvent) => {
+    try {
+      e.currentTarget.setPointerCapture(e.pointerId);
+    } catch {
+      /* already released or synthetic — steering still works */
+    }
+    stick.current = {
+      x: e.clientX,
+      y: e.clientY,
+      id: e.pointerId,
+      moved: false,
+      t: performance.now(),
+    };
+  };
+  const onPointerMove = (e: React.PointerEvent) => {
+    const s = stick.current;
+    if (!s || s.id !== e.pointerId || !gameRef.current) return;
+    const dx = e.clientX - s.x;
+    const dy = e.clientY - s.y;
+    const len = Math.hypot(dx, dy);
+    if (len < 14) return;
+    s.moved = true;
+    gameRef.current.want =
+      Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? RIGHT : LEFT) : dy > 0 ? DOWN : UP;
+    // let the anchor trail the finger so reversals read instantly
+    if (len > 30) {
+      s.x = e.clientX - (dx / len) * 30;
+      s.y = e.clientY - (dy / len) * 30;
+    }
+  };
+  const onPointerEnd = () => {
+    const s = stick.current;
+    stick.current = null;
+    if (!gameRef.current) return;
+    gameRef.current.want = STOP;
+    if (s && !s.moved && performance.now() - s.t < 300) gameRef.current.fire();
+  };
+
   return (
     <Cabinet
       title="Boiler Dig"
@@ -770,7 +974,7 @@ export function BoilerDig({ chalk }: { chalk?: ChalkProp }) {
       controls={[
         "Arrows or WASD to dig",
         "Space vents the steam lance",
-        "Loose cargo falls — stand clear",
+        "Touch: drag to dig, tap to vent",
       ]}
       onStart={() => gameRef.current?.start()}
       onTogglePause={() =>
@@ -783,8 +987,8 @@ export function BoilerDig({ chalk }: { chalk?: ChalkProp }) {
         coarse ? (
           <div className="flex items-center justify-between gap-3">
             <div
-              className="grid w-44 grid-cols-3 gap-2"
-              style={{ gridTemplateAreas: '". up ." "left down right"' }}
+              className="grid w-40 grid-cols-3 gap-1.5"
+              style={{ gridTemplateAreas: '". up ." "left . right" ". down ."' }}
             >
               {(
                 [
@@ -798,10 +1002,17 @@ export function BoilerDig({ chalk }: { chalk?: ChalkProp }) {
                   key={area}
                   type="button"
                   style={{ gridArea: area }}
-                  className="h-11 rounded-md border border-brass/40 bg-card/60 text-base text-gold-light active:bg-card"
-                  onPointerDown={hold(d)}
+                  className="h-12 touch-none rounded-md border border-brass/40 bg-card/60 text-base text-gold-light select-none active:bg-card"
+                  onPointerDown={(e) => {
+                    try {
+                      e.currentTarget.setPointerCapture(e.pointerId);
+                    } catch {
+                      /* capture is a nicety, not a requirement */
+                    }
+                    hold(d)();
+                  }}
                   onPointerUp={release}
-                  onPointerLeave={release}
+                  onPointerCancel={release}
                   aria-label={`Dig ${area}`}
                 >
                   {label}
@@ -810,8 +1021,8 @@ export function BoilerDig({ chalk }: { chalk?: ChalkProp }) {
             </div>
             <button
               type="button"
-              onClick={() => gameRef.current?.fire()}
-              className="h-16 w-16 rounded-full border border-gold-light/60 bg-card/60 font-display text-[10px] font-bold tracking-[0.14em] text-gold-light uppercase active:bg-card"
+              onPointerDown={() => gameRef.current?.fire()}
+              className="h-16 w-16 touch-none rounded-full border border-gold-light/60 bg-card/60 font-display text-[10px] font-bold tracking-[0.14em] text-gold-light uppercase select-none active:bg-card"
             >
               Steam
             </button>
@@ -821,7 +1032,11 @@ export function BoilerDig({ chalk }: { chalk?: ChalkProp }) {
     >
       <canvas
         ref={canvasRef}
-        className="block w-full touch-none"
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={onPointerEnd}
+        onPointerCancel={onPointerEnd}
+        className="block w-full touch-none select-none"
         style={{ aspectRatio: `${W} / ${H}` }}
         aria-label="Boiler Dig game screen"
       />

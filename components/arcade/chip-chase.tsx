@@ -10,6 +10,7 @@ import {
   ParticlePool,
   prefersReducedMotion,
   saveHighScore,
+  walkGrid,
   type GameState,
   type HudState,
   useCoarsePointer,
@@ -64,7 +65,7 @@ const DIRS: Dir[] = [
 ];
 const STOP: Dir = { x: 0, y: 0 };
 
-type SharpMode = "vault" | "exiting" | "roam" | "frightened" | "eyes";
+type SharpMode = "vault" | "exiting" | "roam" | "frightened" | "eyes" | "diving";
 
 interface Sharp {
   suit: string;
@@ -136,6 +137,7 @@ class ChipChaseGame {
 
   constructor(canvas: HTMLCanvasElement, hooks: Hooks) {
     this.ctx = fitCanvas(canvas, W, H);
+    (canvas as HTMLCanvasElement & { __game?: unknown }).__game = this;
     this.hooks = hooks;
     this.high = loadHighScore(SLUG);
     MAZE.forEach((row, r) =>
@@ -247,6 +249,7 @@ class ChipChaseGame {
 
   walkable(c: number, r: number, sharp?: Sharp) {
     if (r === TUNNEL_ROW && (c < 0 || c >= COLS)) return true;
+    if (c < 0 || c >= COLS || r < 0 || r >= ROWS) return false;
     const key = `${c},${r}`;
     if (key === this.doorKey)
       return Boolean(sharp && (sharp.mode === "exiting" || sharp.mode === "eyes"));
@@ -316,58 +319,102 @@ class ChipChaseGame {
     return Math.min(1 + (this.round - 1) * 0.05, 1.35);
   }
 
-  movePlayer(dt: number) {
-    const speed = 5.2 * CELL * this.speedScale();
-    const cx = Math.floor(this.px / CELL);
-    const cy = Math.floor(this.py / CELL);
-    const centerX = (cx + 0.5) * CELL;
-    const centerY = (cy + 0.5) * CELL;
-    const atCenter =
-      Math.abs(this.px - centerX) < 2.2 && Math.abs(this.py - centerY) < 2.2;
+  wrapX = (p: { x: number }) => {
+    const span = W + CELL;
+    if (p.x < -CELL / 2) p.x += span;
+    else if (p.x > W + CELL / 2) p.x -= span;
+  };
 
-    if (atCenter) {
-      if (
-        (this.pnext.x || this.pnext.y) &&
-        this.walkable(cx + this.pnext.x, cy + this.pnext.y)
-      ) {
-        this.pdir = this.pnext;
-        this.px = centerX;
-        this.py = centerY;
-      } else if (!this.walkable(cx + this.pdir.x, cy + this.pdir.y)) {
-        this.pdir = STOP;
-        this.px = centerX;
-        this.py = centerY;
-      }
-    } else if (
-      this.pnext.x === -this.pdir.x &&
-      this.pnext.y === -this.pdir.y &&
-      (this.pnext.x || this.pnext.y)
-    ) {
-      this.pdir = this.pnext; // reversing is always legal
-    }
-
-    this.px += this.pdir.x * speed * dt;
-    this.py += this.pdir.y * speed * dt;
-
-    // tunnel wrap
-    if (this.px < -CELL / 2) this.px = W + CELL / 2 - 1;
-    if (this.px > W + CELL / 2) this.px = -CELL / 2 + 1;
-
-    const key = `${Math.floor(this.px / CELL)},${Math.floor(this.py / CELL)}`;
-    if (this.chips.delete(key)) {
+  eatAt(c: number, r: number) {
+    const k = `${c},${r}`;
+    if (this.chips.delete(k)) {
       this.score += 10;
       this.pushHud();
     }
-    if (this.markers.delete(key)) {
+    if (this.markers.delete(k)) {
       this.score += 50;
       this.frightened = Math.max(2.5, 6.5 - this.round * 0.5);
       this.eatChain = 0;
       this.sharps.forEach((s) => {
-        if (s.mode === "roam") s.dir = { x: -s.dir.x, y: -s.dir.y };
-        if (s.mode === "roam") s.mode = "frightened";
+        if (s.mode === "roam" || s.mode === "frightened") {
+          s.dir = { x: -s.dir.x, y: -s.dir.y };
+          s.mode = "frightened";
+        }
       });
       this.pushHud();
     }
+  }
+
+  movePlayer(dt: number) {
+    const speed = 5.2 * CELL * this.speedScale();
+
+    // reversing is always legal, anywhere in the corridor
+    if (
+      (this.pnext.x || this.pnext.y) &&
+      (this.pdir.x || this.pdir.y) &&
+      this.pnext.x === -this.pdir.x &&
+      this.pnext.y === -this.pdir.y
+    ) {
+      this.pdir = this.pnext;
+    }
+
+    // parked on a center: pull away as soon as the queued lane is open
+    if (!this.pdir.x && !this.pdir.y) {
+      const c = Math.floor(this.px / CELL);
+      const r = Math.floor(this.py / CELL);
+      if (
+        (this.pnext.x || this.pnext.y) &&
+        this.walkable(c + this.pnext.x, r + this.pnext.y)
+      ) {
+        this.pdir = this.pnext;
+      } else {
+        return;
+      }
+    }
+
+    // cornering grace: a turn asked for just past a junction still takes it
+    const cx = Math.floor(this.px / CELL);
+    const cy = Math.floor(this.py / CELL);
+    const past =
+      (this.px - (cx + 0.5) * CELL) * this.pdir.x +
+      (this.py - (cy + 0.5) * CELL) * this.pdir.y;
+    if (
+      (this.pnext.x || this.pnext.y) &&
+      this.pnext.x * this.pdir.x + this.pnext.y * this.pdir.y === 0 &&
+      past > 0 &&
+      past <= 5 &&
+      this.walkable(cx + this.pnext.x, cy + this.pnext.y)
+    ) {
+      this.px = (cx + 0.5) * CELL;
+      this.py = (cy + 0.5) * CELL;
+      this.pdir = this.pnext;
+    }
+
+    let cur = this.pdir;
+    const pos = { x: this.px, y: this.py };
+    const final = walkGrid(
+      pos,
+      cur,
+      speed * dt,
+      CELL,
+      (c, r) => {
+        this.eatAt(c, r);
+        const want = this.pnext;
+        if ((want.x || want.y) && this.walkable(c + want.x, r + want.y)) {
+          cur = want;
+          return want;
+        }
+        if (this.walkable(c + cur.x, r + cur.y)) return cur;
+        return null;
+      },
+      this.wrapX,
+    );
+    this.wrapX(pos);
+    this.px = pos.x;
+    this.py = pos.y;
+    this.pdir = final.x || final.y ? final : STOP;
+
+    this.eatAt(Math.floor(this.px / CELL), Math.floor(this.py / CELL));
   }
 
   sharpTarget(s: Sharp): { c: number; r: number } {
@@ -399,85 +446,104 @@ class ChipChaseGame {
     if (s.mode === "eyes") speed = base * 1.7;
     if (s.r === TUNNEL_ROW && (s.c <= 0 || s.c >= COLS - 1)) speed *= 0.6;
 
+    const doorX = (DOOR.c + 0.5) * CELL;
+    const vaultY = (DOOR.r + 1 + 0.5) * CELL;
+    const exitY = (VAULT_EXIT.r + 0.5) * CELL;
+
     if (s.mode === "vault") {
       s.releaseAt -= dt;
       s.bounce += dt * 6;
       s.y = (s.home.r + 0.5) * CELL + Math.sin(s.bounce) * 4;
-      if (s.releaseAt <= 0) {
+      if (s.releaseAt <= 0) s.mode = "exiting";
+      return;
+    }
+    if (s.mode === "diving") {
+      // eaten eyes sink through the door into the vault, then come back out
+      s.x = doorX;
+      s.y += speed * dt * 0.8;
+      if (s.y >= vaultY) {
+        s.y = vaultY;
         s.mode = "exiting";
-        s.x = (9 + 0.5) * CELL;
-        s.y = (9 + 0.5) * CELL;
       }
       return;
     }
     if (s.mode === "exiting") {
-      s.y -= speed * dt * 0.8;
-      const exitY = (VAULT_EXIT.r + 0.5) * CELL;
-      if (s.y <= exitY) {
-        s.y = exitY;
-        s.mode = this.frightened > 0 ? "frightened" : "roam";
-        s.dir = Math.random() < 0.5 ? DIRS[1] : DIRS[3];
+      // slide under the door first, then rise through it
+      if (Math.abs(s.x - doorX) > 1) {
+        const step = Math.sign(doorX - s.x) * speed * 0.8 * dt;
+        s.x =
+          Math.abs(step) >= Math.abs(doorX - s.x) ? doorX : s.x + step;
+      } else {
+        s.x = doorX;
+        s.y -= speed * dt * 0.8;
+        if (s.y <= exitY) {
+          s.y = exitY;
+          s.mode = this.frightened > 0 ? "frightened" : "roam";
+          s.dir = Math.random() < 0.5 ? DIRS[1] : DIRS[3];
+        }
       }
       s.c = Math.floor(s.x / CELL);
       s.r = Math.floor(s.y / CELL);
       return;
     }
 
-    const cx = Math.floor(s.x / CELL);
-    const cy = Math.floor(s.y / CELL);
-    const centerX = (cx + 0.5) * CELL;
-    const centerY = (cy + 0.5) * CELL;
-    const atCenter =
-      Math.abs(s.x - centerX) < 2.2 && Math.abs(s.y - centerY) < 2.2;
+    let dive = false;
+    let cur = s.dir;
+    const pos = { x: s.x, y: s.y };
+    const final = walkGrid(
+      pos,
+      cur,
+      speed * dt,
+      CELL,
+      (c, r) => {
+        s.c = c;
+        s.r = r;
+        if (s.mode === "eyes" && c === DOOR.c && r === VAULT_EXIT.r) {
+          dive = true;
+          return null;
+        }
+        const target =
+          s.mode === "eyes"
+            ? { c: DOOR.c, r: VAULT_EXIT.r }
+            : this.sharpTarget(s);
+        const options = DIRS.filter(
+          (d) =>
+            !(d.x === -cur.x && d.y === -cur.y) &&
+            this.walkable(c + d.x, r + d.y, s),
+        );
+        const pool = options.length ? options : [{ x: -cur.x, y: -cur.y }];
+        if (s.mode === "frightened") {
+          cur = pool[Math.floor(Math.random() * pool.length)];
+        } else {
+          cur = pool.reduce((best, d) => {
+            const dist = (dd: Dir) =>
+              Math.hypot(c + dd.x - target.c, r + dd.y - target.r);
+            return dist(d) < dist(best) ? d : best;
+          }, pool[0]);
+        }
+        return cur;
+      },
+      this.wrapX,
+    );
+    this.wrapX(pos);
+    s.x = pos.x;
+    s.y = pos.y;
+    s.dir = final.x || final.y ? final : cur;
+    s.c = Math.floor(s.x / CELL);
+    s.r = Math.floor(s.y / CELL);
 
-    if (atCenter && (cx !== s.c || cy !== s.r || (!s.dir.x && !s.dir.y))) {
-      s.c = cx;
-      s.r = cy;
-      const target =
-        s.mode === "eyes" ? { c: DOOR.c, r: VAULT_EXIT.r } : this.sharpTarget(s);
-      const options = DIRS.filter(
-        (d) =>
-          !(d.x === -s.dir.x && d.y === -s.dir.y) &&
-          this.walkable(cx + d.x, cy + d.y, s),
-      );
-      const pool = options.length ? options : [{ x: -s.dir.x, y: -s.dir.y }];
-      if (s.mode === "frightened") {
-        s.dir = pool[Math.floor(Math.random() * pool.length)];
-      } else {
-        s.dir = pool.reduce((best, d) => {
-          const dist = (dd: Dir) =>
-            Math.hypot(cx + dd.x - target.c, cy + dd.y - target.r);
-          return dist(d) < dist(best) ? d : best;
-        }, pool[0]);
-      }
-      s.x = centerX;
-      s.y = centerY;
+    if (dive) {
+      s.mode = "diving";
+      return;
     }
-
-    s.x += s.dir.x * speed * dt;
-    s.y += s.dir.y * speed * dt;
-    if (s.x < -CELL / 2) s.x = W + CELL / 2 - 1;
-    if (s.x > W + CELL / 2) s.x = -CELL / 2 + 1;
 
     // frightened wears off back to the hunt
     if (s.mode === "frightened" && this.frightened <= 0) s.mode = "roam";
-
-    // eyes reaching the vault door drop back in and recover
-    if (s.mode === "eyes") {
-      const nearDoor =
-        Math.abs(s.x - (DOOR.c + 0.5) * CELL) < 4 &&
-        Math.abs(s.y - (VAULT_EXIT.r + 0.5) * CELL) < 4;
-      if (nearDoor) {
-        s.mode = "exiting";
-        s.x = (9 + 0.5) * CELL;
-        s.y = (9 + 0.5) * CELL;
-      }
-    }
   }
 
   collide() {
     for (const s of this.sharps) {
-      if (s.mode === "vault" || s.mode === "exiting" || s.mode === "eyes") continue;
+      if (s.mode !== "roam" && s.mode !== "frightened") continue;
       const d = Math.hypot(s.x - this.px, s.y - this.py);
       if (d > CELL * 0.62) continue;
       if (s.mode === "frightened") {
@@ -582,7 +648,7 @@ class ChipChaseGame {
   drawSharps() {
     const { ctx } = this;
     for (const s of this.sharps) {
-      if (s.mode === "eyes") {
+      if (s.mode === "eyes" || s.mode === "diving") {
         ctx.fillStyle = "#EFE6CF";
         ctx.beginPath();
         ctx.arc(s.x - 4, s.y - 2, 3, 0, Math.PI * 2);
@@ -644,18 +710,23 @@ export function ChipChase({ chalk }: { chalk?: ChalkProp }) {
     return () => game.destroy();
   }, []);
 
-  // swipe steering
-  const touchStart = useRef<{ x: number; y: number } | null>(null);
+  // swipe steering — fires the moment the drag commits, not on finger lift,
+  // and re-arms so an L shaped drag can issue a second turn
+  const swipe = useRef<{ x: number; y: number; id: number } | null>(null);
   const onPointerDown = (e: React.PointerEvent) => {
-    touchStart.current = { x: e.clientX, y: e.clientY };
+    try {
+      e.currentTarget.setPointerCapture(e.pointerId);
+    } catch {
+      /* already released or synthetic — steering still works */
+    }
+    swipe.current = { x: e.clientX, y: e.clientY, id: e.pointerId };
   };
-  const onPointerUp = (e: React.PointerEvent) => {
-    const s = touchStart.current;
-    touchStart.current = null;
-    if (!s) return;
+  const onPointerMove = (e: React.PointerEvent) => {
+    const s = swipe.current;
+    if (!s || s.id !== e.pointerId) return;
     const dx = e.clientX - s.x;
     const dy = e.clientY - s.y;
-    if (Math.hypot(dx, dy) < 22) return;
+    if (Math.hypot(dx, dy) < 16) return;
     const dir =
       Math.abs(dx) > Math.abs(dy)
         ? dx > 0
@@ -665,6 +736,10 @@ export function ChipChase({ chalk }: { chalk?: ChalkProp }) {
           ? DIRS[2]
           : DIRS[0];
     gameRef.current?.setDirFromTouch(dir);
+    swipe.current = { x: e.clientX, y: e.clientY, id: e.pointerId };
+  };
+  const onPointerEnd = () => {
+    swipe.current = null;
   };
 
   return (
@@ -687,14 +762,17 @@ export function ChipChase({ chalk }: { chalk?: ChalkProp }) {
       chalk={chalk}
       touch={
         coarse ? (
-          <div className="grid grid-cols-3 gap-2" style={{ gridTemplateAreas: '". up ." "left down right"' }}>
+          <div
+            className="mx-auto grid w-48 grid-cols-3 gap-1.5"
+            style={{ gridTemplateAreas: '". up ." "left . right" ". down ."' }}
+          >
             {TOUCH_DIRS.map((t) => (
               <button
                 key={t.area}
                 type="button"
                 style={{ gridArea: t.area }}
-                className="h-12 rounded-md border border-brass/40 bg-card/60 text-lg text-gold-light active:bg-card"
-                onClick={() => gameRef.current?.setDirFromTouch(t.dir)}
+                className="h-12 touch-none rounded-md border border-brass/40 bg-card/60 text-lg text-gold-light select-none active:bg-card"
+                onPointerDown={() => gameRef.current?.setDirFromTouch(t.dir)}
                 aria-label={`Move ${t.area}`}
               >
                 {t.label}
@@ -707,8 +785,10 @@ export function ChipChase({ chalk }: { chalk?: ChalkProp }) {
       <canvas
         ref={canvasRef}
         onPointerDown={onPointerDown}
-        onPointerUp={onPointerUp}
-        className="block w-full touch-none"
+        onPointerMove={onPointerMove}
+        onPointerUp={onPointerEnd}
+        onPointerCancel={onPointerEnd}
+        className="block w-full touch-none select-none"
         style={{ aspectRatio: `${W} / ${H}` }}
         aria-label="Chip Chase game screen"
       />
