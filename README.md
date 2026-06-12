@@ -4,6 +4,10 @@ The squad's gaming house on the river — a community site for **Pokémon, UFC, 
 
 **Production domain:** `rollout.community` (deploy pending — see roadmap).
 
+**Owner's manual:** [RULES-AND-ARCHITECTURE.md](RULES-AND-ARCHITECTURE.md) — how the boat is built, the house rules, and a cookbook for everyday changes (fight card, theater reels, guides, deploy). Start there before editing anything.
+
+**Sister house:** [REDTHREAD](https://redthread.red) — the proprietor's speculation board, linked from the footer.
+
 ## What's aboard today
 
 | Deck | Route | Status |

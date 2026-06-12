@@ -34,5 +34,8 @@ The site is one concept: the **S.S. Rollout**, a Victorian riverboat gaming hous
 
 ## Workflow
 - Commits: **concise, plain language a non technical reader understands**, in sensible chunks. Push to `main`.
-- After meaningful changes, update README and this file so the docs match the boat — no drift.
+- After meaningful changes, update README, this file, AND `RULES-AND-ARCHITECTURE.md` (the owner's manual — the long form of these rules) so the docs match the boat — no drift.
 - Verify in the browser before claiming done; the preview tools are there for it.
+
+## Sister house
+- `redthread.red` is the owner's other community (speculation board). It keeps a plaque in the footer ("The proprietor's other house. Pull the thread."). Don't remove it; don't theme Rollout after it.

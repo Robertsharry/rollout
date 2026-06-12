@@ -48,6 +48,25 @@ export function Footer() {
             <div className="mt-5">
               <DiscordButton />
             </div>
+            <a
+              href="https://redthread.red"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group mt-6 inline-flex items-center gap-3 rounded-md border border-border/60 px-4 py-3 transition-colors hover:border-oxblood-bright/60"
+            >
+              <span
+                aria-hidden
+                className="h-px w-8 origin-left scale-x-50 bg-oxblood-bright transition-transform duration-300 group-hover:scale-x-100 motion-reduce:transition-none"
+              />
+              <span>
+                <span className="block font-mono text-xs tracking-[0.18em] text-foreground">
+                  REDTHREAD
+                </span>
+                <span className="mt-0.5 block text-xs text-muted-foreground">
+                  The proprietor&apos;s other house. Pull the thread.
+                </span>
+              </span>
+            </a>
           </div>
 
           {COLUMNS.map((col) => (
